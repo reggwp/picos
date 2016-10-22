@@ -1,0 +1,20 @@
+.nav {
+	position: absolute;
+    right: 15px;
+    bottom: 1px;
+}
+
+.navbar {
+	margin-bottom: 0px;
+	background: #ff8f00;
+	border-color: #ff8f00;
+	border-radius: 0;
+}
+
+.dropdown-toggle, .navbar-brand {
+	color: white !important;
+}
+
+.navbar-default .navbar-nav>.open>a, .navbar-default .navbar-nav>.open>a:focus, .navbar-default .navbar-nav>.open>a:hover {
+	background: #ff8f00 !important;
+}

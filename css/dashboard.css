@@ -1,0 +1,112 @@
+.btn, input, select, textarea, .modal-content {
+	border-radius: 0px !important;
+}
+
+input[type="file"] {
+    display: none;
+}
+
+.dashboard {
+	margin-bottom: 150px;
+}
+
+.flow {
+	white-space: nowrap;
+  	overflow: hidden;
+  	text-overflow: ellipsis;
+}
+
+.flatten-right {
+	padding-right: 0;
+}
+
+.flatten-left {
+	padding-left: 0;
+}
+
+.pr-5 {
+	padding-right: 5px;
+}
+
+.pl-5 {
+	padding-left: 5px;
+}
+
+.add_products {
+	margin-top: 50px;
+	-webkit-box-shadow: 0px 0px 3px 0px rgba(140,140,140,1);
+	-moz-box-shadow: 0px 0px 3px 0px rgba(140,140,140,1);
+	box-shadow: 0px 0px 3px 0px rgba(140,140,140,1);
+	padding: 20px;
+}
+
+.product_card {
+	-webkit-box-shadow: 0px 0px 3px 0px rgba(140,140,140,1);
+	-moz-box-shadow: 0px 0px 3px 0px rgba(140,140,140,1);
+	box-shadow: 0px 0px 3px 0px rgba(140,140,140,1);
+	/*height: 500px;*/
+	margin-bottom: 30px;
+}
+
+.product_card:hover {	
+	background-color: #f8f8f8;
+}
+
+.product_info {
+	padding: 20px;
+}
+
+
+.product_name {
+	font-size: 25px;
+	font-weight: bold;
+}
+
+.product_background {
+	height: 100px;
+	
+  	overflow: hidden;
+  	text-overflow: ellipsis;
+}
+
+.product_description {
+	font-size: 12px;
+}
+
+.product_price .price {
+	font-size: 20px;
+	color: #689f38;
+}
+
+.product_price .per_serving {
+	font-size: 12px;
+}
+
+.jumbotron {
+	padding-left: 50px;
+	padding-right: 50px;
+	background: url("../images/pagsanjan_arch.JPG");
+}
+
+.view_cart_btn {
+	position: relative;
+	top: 10px;
+}
+
+
+.atc_div {
+	margin-top: 10px;
+}
+
+.atc_div button {
+	width: 100%;
+}
+
+.total {
+	position: relative;
+	top: 5px;
+}
+
+.total_price {
+	color: #689f38;
+}

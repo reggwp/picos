@@ -1,0 +1,17 @@
+.add_row {
+	width: 100%;
+}
+
+.invalid_cred_newProduct {
+	border: 1px solid red;
+}
+
+.mt-20 {
+	margin-top: 20px;
+}
+
+.add_product_row {
+	padding-top: 15px;
+	padding-bottom: 15px;
+    border-bottom: 1px solid #f1f1f1;
+}

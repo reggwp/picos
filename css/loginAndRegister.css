@@ -1,0 +1,38 @@
+.invalid_cred_login, .invalid_cred_register {
+	border: 2px solid red;
+}
+
+.mb-5 {
+	margin-bottom: 5px;
+}
+
+.mb-30 {
+	margin-bottom: 30px;
+}
+
+.brand {
+	position: relative;
+	top: 130px;
+}
+
+.loginMsg {
+	position: relative;
+	top: 100px;
+}
+
+.login {
+	margin-top: 120px;
+	padding: 30px;
+	-webkit-box-shadow: 0px 0px 3px 0px rgba(140,140,140,1);
+	-moz-box-shadow: 0px 0px 3px 0px rgba(140,140,140,1);
+	box-shadow: 0px 0px 3px 0px rgba(140,140,140,1);
+}
+
+
+.register {
+	margin-top: 50px;
+	padding: 30px;
+	-webkit-box-shadow: 0px 0px 3px 0px rgba(140,140,140,1);
+	-moz-box-shadow: 0px 0px 3px 0px rgba(140,140,140,1);
+	box-shadow: 0px 0px 3px 0px rgba(140,140,140,1);
+}
