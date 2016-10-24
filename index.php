@@ -303,8 +303,8 @@
 									<option>Mains first</option> -->
 									<option>Cheapest</option>
 									<option>Most expensive</option>
-									<option>For more people</option>
-									<option>For less people</option>
+									<option>Newest</option>
+									<option>Oldest</option>
 								</select>
 							</div>
 						</div>
@@ -441,7 +441,7 @@
 									</div>
 									<div class="col-sm-6">
 										<label for="changeFor">Desired date and time of delivery</label><br/>
-										<input  ng-class="{'invalid_cred_cart' : timeError}" id="deliveryTime" type="time" class="form-control" ng-model="new.time">
+										<input  ng-class="{'invalid_cred_cart' : timeError || !new.time}" id="deliveryTime" type="time" class="form-control" ng-model="new.time">
 										<small class="cr" ng-cloak ng-if="timeError">{{timeError}}</small>
 									</div>
 								</div><br/>

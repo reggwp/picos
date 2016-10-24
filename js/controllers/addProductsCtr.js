@@ -35,36 +35,38 @@ app.controller('addProductsCtr', ['$rootScope', '$scope', '$http', '$localStorag
 		};
 
 		$scope.saveRow = function (row, index) {
-			$scope.disableSubmitAll = true;
-			row.loading = true;
-			row.standby = false;
-			if (!document.getElementsByClassName('invalid_cred_newProduct').length) {
-				row.image = document.getElementById('image-preview-' + index).src;
-				$http({
-				    method: 'POST',
-				    url: '../php/addProduct.php',
-				    data: row,
-				    headers: {'Content-Type': 'application/x-www-form-urlencoded'}
-				}).
-				success(function (res) {
-					if (res === '3') {
-						$timeout(function () {
-							row.standby = false;
-							row.loading = false;
-							row.duplicate = true;
-							$scope.saveMsg = "Product name already exists. Choose another name.";
-						}, 1000);
-					}
-					else if (res === '1') {
-						$timeout(function () {
-							row.standby = false;
-							row.loading = false;
-							row.inserted = true;
-							$scope.saveMsg = "Product has been added.";
-						}, 1000);
-					}
-				})
-			}
+			$timeout(function () {
+				if (!document.getElementsByClassName('invalid_cred_newProduct').length) {
+					$scope.disableSubmitAll = true;
+					row.loading = true;
+					row.standby = false;
+					row.image = document.getElementById('image-preview-' + index).src;
+					$http({
+					    method: 'POST',
+					    url: '../php/addProduct.php',
+					    data: row,
+					    headers: {'Content-Type': 'application/x-www-form-urlencoded'}
+					}).
+					success(function (res) {
+						if (res === '3') {
+							$timeout(function () {
+								row.standby = false;
+								row.loading = false;
+								row.duplicate = true;
+								$scope.saveMsg = "Product name already exists. Choose another name.";
+							}, 1000);
+						}
+						else if (res === '1') {
+							$timeout(function () {
+								row.standby = false;
+								row.loading = false;
+								row.inserted = true;
+								$scope.saveMsg = "Product has been added.";
+							}, 1000);
+						}
+					})
+				}
+			});
 		};
 
 		$scope.goBack = function (row, flag) {
