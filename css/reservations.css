@@ -1,0 +1,32 @@
+.reservationsTable {
+	margin-top: 30px;
+	padding: 30px;
+	-webkit-box-shadow: 0px 0px 3px 0px rgba(140,140,140,1);
+	-moz-box-shadow: 0px 0px 3px 0px rgba(140,140,140,1);
+	box-shadow: 0px 0px 3px 0px rgba(140,140,140,1);
+}
+
+.invalid_cred_reservation {
+	border: 1px solid red;
+}
+
+.reservation-products {
+	position: relative;
+    top: 8px;
+}
+
+.mb5 {
+	margin-bottom: 5px;
+}
+
+.reservationMsg {
+	margin-bottom: 20px;
+    padding: 10px;
+    background-color: #449d44;
+    border-color: #398439;
+    color: #fff;
+    text-align: center;
+    -webkit-box-shadow: 0px 0px 3px 0px rgba(140,140,140,1);
+	-moz-box-shadow: 0px 0px 3px 0px rgba(140,140,140,1);
+	box-shadow: 0px 0px 3px 0px rgba(140,140,140,1);
+}

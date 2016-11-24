@@ -3,7 +3,7 @@ app.controller('dashboardCtr', ['$rootScope', '$scope', '$http', '$localStorage'
 
 
 		$scope.example = {};
-
+		$scope.products = [];
 		$scope.loginCtr = $scope.$$prevSibling;
 		$scope.$watch('loginCtr.loggedIn', function () {
 			$scope.user = $localStorage.user;
@@ -40,6 +40,7 @@ app.controller('dashboardCtr', ['$rootScope', '$scope', '$http', '$localStorage'
 			$scope.showAddProducts = false;
 			$scope.showFeedback = false;
 			$scope.showOrdersTable = false;
+			$scope.showRequestReservation = false;
 		};
 
 		$scope.setUpdatePassword = function () {
@@ -51,6 +52,7 @@ app.controller('dashboardCtr', ['$rootScope', '$scope', '$http', '$localStorage'
 			$scope.showAddProducts = false;
 			$scope.showFeedback = false;
 			$scope.showOrdersTable = false;
+			$scope.showRequestReservation = false;
 		};
 
 		$scope.setNewAdminAccount = function () {
@@ -62,6 +64,7 @@ app.controller('dashboardCtr', ['$rootScope', '$scope', '$http', '$localStorage'
 			$scope.showAddProducts = false;
 			$scope.showFeedback = false;
 			$scope.showOrdersTable = false;
+			$scope.showRequestReservation = false;
 		};
 
 		$scope.viewProducts = function () {
@@ -73,6 +76,7 @@ app.controller('dashboardCtr', ['$rootScope', '$scope', '$http', '$localStorage'
 			$scope.showAddProducts = false;
 			$scope.showFeedback = false;
 			$scope.showOrdersTable = false;
+			$scope.showRequestReservation = false;
 			$scope.getProducts();
 		};
 
@@ -85,6 +89,7 @@ app.controller('dashboardCtr', ['$rootScope', '$scope', '$http', '$localStorage'
 			$scope.showAddProducts = false;
 			$scope.showFeedback = false;
 			$scope.showOrdersTable = false;
+			$scope.showRequestReservation = false;
 		};
 
 		$scope.addNewProducts = function () {
@@ -96,6 +101,7 @@ app.controller('dashboardCtr', ['$rootScope', '$scope', '$http', '$localStorage'
 			$scope.showAddProducts = true;
 			$scope.showFeedback = false;
 			$scope.showOrdersTable = false;
+			$scope.showRequestReservation = false;
 		};
 
 		$scope.viewSendFeedback = function () {
@@ -107,6 +113,7 @@ app.controller('dashboardCtr', ['$rootScope', '$scope', '$http', '$localStorage'
 			$scope.showAddProducts = false;
 			$scope.showFeedback = true;
 			$scope.showOrdersTable = false;
+			$scope.showRequestReservation = false;
 		};
 
 		$scope.viewOrdersTable = function () {
@@ -118,9 +125,25 @@ app.controller('dashboardCtr', ['$rootScope', '$scope', '$http', '$localStorage'
 			$scope.showAddProducts = false;
 			$scope.showFeedback = false;
 			$scope.showOrdersTable = true;
+			$scope.showRequestReservation = false;
+		};
+
+		$scope.viewRequestReservation = function () {
+			$scope.showUpdatePassword = false;
+			$scope.showEditAccount = false;
+			$scope.showCreateAdminAccount = false;
+			$scope.showProducts = false;
+			$scope.showCart = false;
+			$scope.showAddProducts = false;
+			$scope.showFeedback = false;
+			$scope.showOrdersTable = false;
+			$scope.showRequestReservation = true;
 		};
 
 		$scope.getProducts = function () {
+			$scope.productsDetected = true;
+
+
 			$http({
 			    method: 'GET',
 			    url: '../php/getProducts.php',
@@ -128,10 +151,16 @@ app.controller('dashboardCtr', ['$rootScope', '$scope', '$http', '$localStorage'
 			    headers: {'Content-Type': 'application/x-www-form-urlencoded'}
 			}).
 			success(function (res) {
-				angular.forEach(res, function (item) {
-					item.standby = true;
-				});
-				$scope.products = res;
+				if (res.length) {
+					angular.forEach(res, function (item) {
+						item.standby = true;
+					});
+					$scope.products = res;
+				}
+				else {
+					$scope.productsDetected = false;
+					$scope.products = [];
+				}
 
 				if ($scope.user) {
 					$scope.user.isAdmin = parseInt($scope.user.isAdmin);	
@@ -140,7 +169,6 @@ app.controller('dashboardCtr', ['$rootScope', '$scope', '$http', '$localStorage'
 		};
 
 
-		$scope.getProducts();
 		$scope.viewProducts();
 
 	}]

@@ -22,6 +22,7 @@
 	<script type="text/javascript" src="js/controllers/addProductsCtr.js"></script>
 	<script type="text/javascript" src="js/controllers/sendFeedbackCtr.js"></script>
 	<script type="text/javascript" src="js/controllers/ordersTableCtr.js"></script>
+	<script type="text/javascript" src="js/controllers/reservationsCtr.js"></script>
 
 	<!-- SERVICES -->
 	<script type="text/javascript" src="js/services/hashService.js"></script>
@@ -45,17 +46,48 @@
 	<link rel="stylesheet" type="text/css" href="css/addProducts.css">
 	<link rel="stylesheet" type="text/css" href="css/sendFeedback.css">
 	<link rel="stylesheet" type="text/css" href="css/ordersTable.css">
+	<link rel="stylesheet" type="text/css" href="css/reservations.css">
 
-	<script src='https://www.google.com/recaptcha/api.js'></script>
+	<script src="https://www.google.com/recaptcha/api.js?onload=prepCaptcha&render=explicit"></script>
+
 	<script type="text/javascript">
-	  	var captchaResponse = function (res) {
-	  		localStorage.captchaValidated = true;
-	  		console.log(localStorage)
-	  	};
-	  	var captchaExpire = function () {
-	  		localStorage.captchaValidated = false;
-	  		console.log(localStorage)
-	  	}
+		// 6LeN5AkUAAAAAENsf9jW48i6l5NR4fKj9NDa2OeB
+		var cartCaptcha,
+			reservationCaptcha;
+
+		function callback () {
+			localStorage.captchaValidated = true;
+			console.log(localStorage)
+		}
+
+		function expiredCallback () {
+			localStorage.captchaValidated = false;
+			console.log(localStorage)
+		}
+
+		function callbackReservation () {
+			localStorage.captchaValidatedReservation = true;
+			console.log(localStorage)
+		}
+
+		function expiredCallbackReservation () {
+			localStorage.captchaValidatedReservation = false;
+			console.log(localStorage)
+		}
+
+		function prepCaptcha() {
+			cartCaptcha = grecaptcha.render('RecaptchaField1', {
+	          'sitekey' : '6LeN5AkUAAAAAENsf9jW48i6l5NR4fKj9NDa2OeB',
+	          'callback': callback,
+	          'expired-callback': expiredCallback
+	        });
+	        reservationCaptcha = grecaptcha.render('RecaptchaField2', {
+	          'sitekey' : '6LeN5AkUAAAAAENsf9jW48i6l5NR4fKj9NDa2OeB',
+	          'callback': callbackReservation,
+	          'expired-callback': expiredCallbackReservation
+	        });
+
+		}
   	</script>
 
 </head>
@@ -133,6 +165,10 @@
 						
 						<li ng-cloak ng-if="!user.isAdmin"><a href="" ng-click="viewOrdersTable()"><i class="fa fa-list"></i> View my orders</a></li>
 						<li ng-cloak ng-if="user.isAdmin"><a href="" ng-click="viewOrdersTable()"><i class="fa fa-list"></i> View customer orders</a></li>
+
+						<li ng-cloak ng-if="!user.isAdmin"><a href="" ng-click="viewRequestReservation()"><i class="fa fa-clock-o"></i> Make a reservation</a></li>
+						<li ng-cloak ng-if="!user.isAdmin"><a href="" ng-click="viewMyReservations()"><i class="fa fa-th-list"></i> View my reservations</a></li>
+						<li ng-cloak ng-if="user.isAdmin"><a href="" ng-click="viewReservationsTable()"><i class="fa fa-th-list"></i> View customer reservations</a></li>
 
 
 			            <li ng-cloak ng-if="!user.isAdmin" role="separator" class="divider"></li>
@@ -249,11 +285,44 @@
 			        <h4 class="modal-title" id="myModalLabel">Edit Product</h4>
 			      </div>
 			      <div class="modal-body">
-			        ...
+			       	
+				    	<div class="row">
+				    		<div class="col-sm-4">
+				    			<label>Image</label>
+						    	<label for="file-upload-edit" class="btn btn-primary btn-sm">
+								    <i class="fa fa-upload"></i> <span>Browse product image</span>
+								</label>
+								<input id="file-upload-edit" type="file" fileread="vm.uploadme" />
+				    		</div>
+				    		<div class="col-sm-5">
+				    			<label>&nbsp;</label>
+				    			<img ng-cloak ng-show="showAngularImage" width="100%" height="120px;" ng-src="{{tbe.image}}">
+				    			<img ng-cloak ng-show="!showAngularImage" id="image-preview-edit-na" width="100%" height="120px;">
+				    		</div>
+				    		<div class="col-sm-3">&nbsp;</div>
+				      	</div><br/>
+
+				      	<div>
+				      		<label>Name</label>
+				      		<input ng-class="{'invalid_cred_productedit' : !tbe.name}" type="text" class="form-control" placeholder="Update product name" ng-model="tbe.name">
+				      		<div ng-cloak ng-if="duplicateProduct" class="cr mt5">There is already a product with this name.</div>
+				      	</div><br/>
+
+				      	<div><label>Description</label><textarea class="form-control" placeholder="Update product description" ng-model="tbe.description"></textarea></div><br/>
+
+				      	<div class="row">
+				      		<div class="col-sm-6">
+				      			<label>Serving</label><input ng-class="{'invalid_cred_productedit' : !tbe.serving}" type="text" class="form-control" placeholder="Update product serving" onkeypress='return event.charCode >= 48 && event.charCode <= 57' ng-model="tbe.serving">
+				      		</div>
+				      		<div class="col-sm-6">
+				      			<label>Pricing</label><input ng-class="{'invalid_cred_productedit' : !tbe.price}" type="text" class="form-control" placeholder="Update product price" onkeypress='return event.charCode >= 48 && event.charCode <= 57' ng-model="tbe.price">
+				      		</div>
+				      	</div>
+
 			      </div>
 			      <div class="modal-footer">
 			        <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-			        <button type="button" class="btn btn-primary">Save changes</button>
+			        <button type="button" class="btn btn-success" ng-click="confirmEditProduct()">Save changes</button>
 			      </div>
 			    </div>
 			  </div>
@@ -294,18 +363,10 @@
 								<span class="pull-right">Sort by:</span>		
 							</div>
 							<div class="col-sm-9">
-								<select class="form-control">
-									<option>A-Z</option>
-									<option>Z-A</option>
-									<option>Best-seller</option>
-<!-- 									<option>Desserts first</option>
-									<option>Sides first</option>
-									<option>Mains first</option> -->
-									<option>Cheapest</option>
-									<option>Most expensive</option>
-									<option>Newest</option>
-									<option>Oldest</option>
-								</select>
+
+								<select ng-options="item as item.name for item in productFilter" ng-model="status" ng-change="sortProductsBy(status)" class="form-control"></select>
+
+
 							</div>
 						</div>
 					</div>
@@ -313,15 +374,19 @@
 				<br/>
 				<div class="row">
 
+					<div ng-cloak ng-if="!products.length">
+						<center ng-cloak ng-if="productsDetected">Fetching products...</center>
+						<center ng-cloak ng-if="!productsDetected">There are currently no products in the database.</center>
+					</div>
 
-					<!-- <div ng-cloak ng-if=""></div> -->
-
-
-					<div ng-cloak ng-if="products.length" ng-repeat="product in products | filter:productInformation" class="col-sm-4">
+					<div ng-cloak ng-if="products.length" ng-repeat="product in products | filter:productInformation | orderBy:sortType" class="col-sm-4">
 						<div class="product_card">
 							<img ng-src="{{product.image}}" width="100%" height="194px;">
-							<div class="product_info">
-								<div><span class="product_name">{{product.name}}</span></div><br/>
+							<div class="product_info" title="This product was updated last {{product.dateupdated | date:'fullDate'}}">
+								<div>
+									<span class="product_name">{{product.name}}</span>
+									<span ng-cloak ng-if="product.sold >= 500" class="label label-warning label-lg">Best-seller!</span>
+								</div><br/>
 								<div class="product_background"><span>{{product.description}}</span></div><br/>
 								<div class="product_description">
 									<span ng-cloak ng-if="product.serving > 1">Serves 1 to {{product.serving | number}} persons</span>
@@ -336,14 +401,23 @@
 								</div>
 								<br/>
 
-								<div ng-cloak ng-if="user.isAdmin" >
-									<button class="btn btn-primary" data-toggle="modal" data-target="#editProduct">Edit product</button>
-									<button class="btn btn-danger" data-toggle="modal" data-target="#deleteProduct" ng-click="prepDeleteProduct(product, $index)">Delete product</button>
+								<div ng-cloak ng-if="user.isAdmin">
+
+									<button class="btn btn-warning" ng-click="setProductStock(product)"><i class="fa fa-exclamation-circle"></i>
+										<span ng-cloak ng-if="product.isOutOfStock === '0'">Set as out of stock</span>
+										<span ng-cloak ng-if="product.isOutOfStock === '1'">Set as in stock</span>
+									</button>
+
+									<button class="btn btn-primary" data-toggle="modal" data-target="#editProduct" ng-click="prepEditProduct(product)"><i class="fa fa-pencil"></i> Edit product</button>
+									<button class="btn btn-danger" data-toggle="modal" data-target="#deleteProduct" ng-click="prepDeleteProduct(product, $index)"><i class="fa fa-times"></i> Delete product</button>
 								</div>
-								<div ng-cloak ng-if="!user.isAdmin">
+
+
+
+								<div ng-cloak ng-if="!user.isAdmin && product.isOutOfStock === '0'">
 									<div class="row">
 										<div class="col-sm-6">
-											    <input type="number" name="input" ng-model="product.value" min="1" max="999" required class="form-control" placeholder="Quantity">
+											<input type="number" name="input" ng-model="product.value" min="1" max="999" required class="form-control" placeholder="Quantity">
 										</div>
 										<div class="col-sm-6">
 											<div class="total"><span>Total: </span><span class="total_price">{{product.price * product.value | currency:"₱"}}</span></div>
@@ -361,6 +435,12 @@
 										</div>
 									</div>
 								</div>
+
+								<div ng-cloak ng-if="!user.isAdmin && product.isOutOfStock === '1'">
+									<button class="btn btn-danger w100" disabled>Currently out of stock</button>
+								</div>
+
+
 
 							</div>
 						</div>
@@ -452,9 +532,10 @@
 										<small class="cr" ng-cloak ng-if="moneyError">{{moneyError}}</small>
 									</div>
 									<div class="col-sm-6">
-										<div class="g-recaptcha" data-expired-callback="captchaExpire" data-callback="captchaResponse" data-sitekey="6LeN5AkUAAAAAENsf9jW48i6l5NR4fKj9NDa2OeB"></div>
+										<div id="RecaptchaField1"></div>
+										<!-- <div class="g-recaptcha" data-expired-callback="captchaExpire" data-callback="captchaResponse" data-sitekey="6LeN5AkUAAAAAENsf9jW48i6l5NR4fKj9NDa2OeB"></div> -->
 									</div>
-								</div><br/>
+								</div><hr/>
 								<div class="row">
 									<div class="col-sm-12">
 
@@ -482,6 +563,167 @@
 				</div>
 			</div>
 		</div>
+
+
+
+
+
+
+
+
+
+		<!-- REQUEST RESERVATION -->
+		<div ng-cloak ng-show="showRequestReservation" ng-controller="reservationsCtr">
+			<div class="row">
+				<div class="col-sm-2">&nbsp;</div>
+				<div class="col-sm-8">
+					<div class="reservationsTable">
+						<h3>Make a reservation</h3><br/>
+						<div class="row">
+							<div class="col-sm-6">
+								<input type="checkbox" ng-model="reservationInfo.ownName"> Use own name</input><br/>
+								<b ng-cloak ng-if="reservationInfo.ownName">{{reserver.firstname}} {{reserver.lastname}}</b>
+								<input ng-class="{'invalid_cred_reservation' : !new.name}" ng-cloak ng-if="!reservationInfo.ownName" type="text" class="form-control" ng-model="new.name">
+							</div>
+							<div class="col-sm-6">
+								<input type="checkbox" ng-model="reservationInfo.ownContact"> Use own contact number</input><br/>
+								<b ng-cloak ng-if="reservationInfo.ownContact">{{reserver.contact}}</b>
+								<input ng-class="{'invalid_cred_reservation' : !new.contact}" ng-cloak ng-if="!reservationInfo.ownContact" type="text" class="form-control" ng-model="new.contact" onkeypress='return event.charCode >= 48 && event.charCode <= 57'>
+							</div>
+						</div><br/>
+						<div class="row">
+							<div class="col-sm-6">
+								<label>Type of occasion</label>
+								<select ng-options="item as item.name for item in occasionType" ng-model="occasion" class="form-control"></select>
+							</div>
+							<div class="col-sm-6">
+								<label>Name of occasion</label>
+								<input type="text" class="form-control" ng-model="reservationInfo.occasionName">
+							</div>
+						</div><br/>
+
+						<div class="row">
+							<div class="col-sm-6">
+								<label>Number of persons</label>
+								<input ng-class="{'invalid_cred_reservation' : !reservationInfo.persons}" type="text" class="form-control" onkeypress='return event.charCode >= 48 && event.charCode <= 57' ng-model="reservationInfo.persons">
+								<!-- <small class="cr" ng-cloak ng-if="moneyError">{{moneyError}}</small> -->
+							</div>
+							<div class="col-sm-6">
+
+								<div class="row">
+									<div class="col-sm-6">
+										<label for="changeFor">Date of arrival</label><br/>
+										<input ng-class="{'invalid_cred_reservation' : dateError || !reservationInfo.date}" id="deliveryTime" type="date" class="form-control" ng-model="reservationInfo.date">
+										<small class="cr" ng-cloak ng-if="dateError">{{dateError}}</small>
+									</div>
+									<div class="col-sm-6">
+										<label for="changeFor">Time of arrival</label><br/>
+										<input ng-class="{'invalid_cred_reservation' : timeError || !reservationInfo.time}" id="deliveryTime" type="time" class="form-control" ng-model="reservationInfo.time">
+										<small class="cr" ng-cloak ng-if="timeError">{{timeError}}</small>
+									</div>
+								</div>
+
+								
+							</div>
+						</div><br/>
+
+						<div class="row">
+							<div class="col-sm-12">
+								<label>Any requests?</label>
+								<textarea class="form-control" rows="4" ng-model="reservationInfo.request"></textarea>	
+							</div>
+						</div><br/>
+
+						<div class="row">
+							<div class="col-sm-12">
+								<label>Food choices</label>
+								<div class="row">
+									<div ng-repeat="product in products" class="col-sm-4 mb5">
+										<div class="row">
+											<div class="col-sm-8">
+												<span class="pull-right reservation-products">{{product.name}}</span>
+											</div>
+											<div class="col-sm-4">
+												<input type="text" class="form-control" placeholder="pcs." onkeypress='return event.charCode >= 48 && event.charCode <= 57' ng-model="product.reservedQuantity">
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div><hr/>
+
+						<div class="row">
+							<div class="col-sm-12">
+								<center>
+									<div id="RecaptchaField2"></div>
+								</center>
+							</div>
+						</div><hr/>
+
+						<div class="row">
+							<div class="col-sm-12">
+
+								<div ng-cloak ng-if="loading">
+									<div class="progress">
+										<div class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%">
+									    	Submitting reservation... Hang on a second...
+									  	</div>
+									</div>
+								</div>
+
+								<div class="reservationMsg" ng-cloak ng-if="reservationMsg">{{reservationMsg}}</div>
+
+								<div ng-cloak ng-if="standby">
+
+
+									<div ng-cloak ng-if="showSendEmailConfirmation">
+										<button ng-disabled="sendingEmail" class="btn btn-primary btn-lg w100" ng-click="sendEmailConfirmation()">
+											<span ng-cloak ng-if="!sendingEmail">Send Email confirmation</span>
+											<span ng-cloak ng-if="sendingEmail">Sending Email confirmation to {{reserver.email}}...</span>
+										</button>
+										<center ng-cloak ng-if="emailSendFailMsg"><br/><small class="cr">{{emailSendFailMsg}}</small></center>
+									</div>
+									<div ng-cloak ng-if="showConfirmCodeField">
+										<div class="row">
+											<div class="col-sm-3">&nbsp;</div>
+											<div class="col-sm-6">
+												<div class="row">
+													<div class="col-sm-6">
+														<input ng-class="{'invalid_cred_reservation' : userConfirmCode !== savedCode.toString()}" type="text" class="form-control" ng-model="userConfirmCode">
+													</div>
+													<div class="col-sm-6">
+														<button class="btn btn-success w100" ng-click="confirmCode(userConfirmCode)">Confirm code</button>
+													</div>
+												</div>
+											</div>
+											<div class="col-sm-3">&nbsp;</div>
+											<div ng-cloak ng-if="invalidCode" class="col-sm-12"><center><br/><small class="cr">Invalid code</small></center></div>
+										</div>
+									</div>
+									<div ng-cloak ng-if="showConfirmReservation">
+										<button class="btn btn-success btn-lg w100" ng-click="confirmReservation()">Confirm Reservation</button>
+										<center ng-cloak ng-if="generalConfirmMsg"><br/><small class="cr">{{generalConfirmMsg}}</small></center>
+									</div>
+									
+								</div>
+
+							</div>
+						</div>
+
+
+
+					</div>
+				</div>
+				<div class="col-sm-2">&nbsp;</div>
+			</div>
+		</div>
+
+
+
+
+
+
+
 
 
 		<!-- VIEW CUSTOMER OR ADMIN ORDERS -->

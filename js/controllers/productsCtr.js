@@ -3,8 +3,31 @@ app.controller('productsCtr', ['$rootScope', '$scope', '$http', '$localStorage',
 
 		var ctr = 0;
 
+		$scope.showAngularImage = true;
 		$rootScope.currentOrders = {};
 		$localStorage.previousValue = 0;
+
+		$scope.productFilter = [
+			{name: 'A-Z', filter: 'name'},
+			{name: 'Z-A', filter: '-name'},
+			{name: 'Best-seller', filter: '-sold'},
+			{name: 'Worst-seller', filter: 'sold'},
+			{name: 'Most expensive', filter: '-price'},
+			{name: 'Cheapest', filter: 'price'},
+			{name: 'Newest', filter: '-dateupdated'},
+			{name: 'Oldest', filter: 'dateupdated'}
+		];
+
+		$scope.status = $scope.productFilter[2];
+		$scope.sortType = '-sold';
+
+		$scope.$on('showAngularImage', function () {
+			$scope.showAngularImage = false;
+		});
+
+		$scope.sortProductsBy = function (filter) {
+			$scope.sortType = filter.filter;
+		};
 
 		$scope.addProductToCart = function (product) {
 
@@ -39,8 +62,28 @@ app.controller('productsCtr', ['$rootScope', '$scope', '$http', '$localStorage',
 			$scope.decoyIndex = decoyIndex;
 		};
 
+		$scope.prepEditProduct = function (product) {
+			$scope.showAngularImage = true;
+			$scope.tbe = angular.copy(product);
+		};
+
+		$scope.setProductStock = function (product) {
+			var stock = parseInt(product.isOutOfStock);
+			console.log(stock)
+			stock = stock ? 0 : 1;
+
+			$http({
+			    method: 'UPDATE',
+			    url: '../php/setProductStock.php',
+			    data: {id: product.id, stock: stock},
+			    headers: {'Content-Type': 'application/x-www-form-urlencoded'}
+			}).
+			success(function (res) {
+				product.isOutOfStock = stock.toString();
+			});
+		};
+
 		$scope.confirmDeleteProduct = function () {
-			$scope.deleteMsg = null;
 			$http({
 			    method: 'DELETE',
 			    url: '../php/deleteProduct.php',
@@ -59,6 +102,39 @@ app.controller('productsCtr', ['$rootScope', '$scope', '$http', '$localStorage',
 					}, 1500);
 				}
 			})
+		};
+
+		$scope.confirmEditProduct = function () {
+			$scope.duplicateProduct = false;
+
+			$timeout(function () {
+				if (!document.getElementsByClassName('invalid_cred_productedit').length) {
+
+					$scope.tbe.id = parseInt($scope.tbe.id);
+					$scope.tbe.serving = parseInt($scope.tbe.serving);
+					$scope.tbe.price = parseInt($scope.tbe.price);
+
+					if (!$scope.showAngularImage) {
+						$scope.tbe.image = document.getElementById('image-preview-edit-na').src;
+					}
+
+					$http({
+					    method: 'POST',
+					    url: '../php/updateProduct.php',
+					    data: $scope.tbe,
+					    headers: {'Content-Type': 'application/x-www-form-urlencoded'}
+					}).
+					success(function (res) {
+						console.log(res)
+						console.log(typeof res)
+						if (res === '1') {
+							$rootScope.$broadcast('viewProducts');
+							angular.element('#editProduct').modal('hide');
+						}
+					});
+
+				}
+			});
 		};
 
 

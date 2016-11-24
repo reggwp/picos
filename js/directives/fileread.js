@@ -9,6 +9,8 @@ app.directive("fileread", [function () {
                 reader.onload = function (loadEvent) {
                     scope.$apply(function () {
                         scope.fileread = loadEvent.target.result;
+                        
+                        scope.$root.$broadcast('showAngularImage');
                         scope.$root.$broadcast('passImage', scope.fileread, element[0].name);
                     });
                 }

@@ -18,8 +18,14 @@ app.controller('cartCtr', ['$rootScope', '$scope', '$http', '$localStorage', '$t
 
 		$scope.resetter = function () {
 			localStorage.captchaValidated = false;
-			// $scope.orders = $rootScope.currentOrders;
-			$scope.orders = JSON.parse('{"Pork Adobo":{"id":"1","name":"Pork Adobo","description":"A staple of Filipino cuisine. The pork adobo is the Philippines\' national dish. Taste it and you\'ll see why.","serving":"3","price":"200","sold":"1422","image":"images/1.jpg","standby":true,"value":2,"adding":false,"totalPrice":400,"success":false,"inCart":2},"Pancit Canton":{"id":"2","name":"Pancit Canton","description":"Our best-selling noodle dish. Our pancit canton has all the great flavors you love without the preservatives. Try it and taste the difference!","serving":"3","price":"180","sold":"7526","image":"images/2.jpg","standby":true,"value":13,"adding":false,"totalPrice":2340,"success":false,"inCart":13},"Lumpiang Shanghai":{"id":"3","name":"Lumpiang Shanghai","description":"A Chinese delicacy with a Filipino twist! Enjoy our freshly fried spring rolls with our signature dipping sauce. Crunchy and yummy!","serving":"3","price":"150","sold":"556","image":"images/3.jpg","standby":true,"value":27,"adding":false,"totalPrice":4050,"success":false,"inCart":27}}');
+			
+
+
+			$scope.orders = $rootScope.currentOrders;
+			// $scope.orders = JSON.parse('{"Pork Adobo":{"id":"1","name":"Pork Adobo","description":"A staple of Filipino cuisine. The pork adobo is the Philippines\' national dish. Taste it and you\'ll see why.","serving":"3","price":"200","sold":"1422","image":"images/1.jpg","standby":true,"value":2,"adding":false,"totalPrice":400,"success":false,"inCart":2},"Pancit Canton":{"id":"2","name":"Pancit Canton","description":"Our best-selling noodle dish. Our pancit canton has all the great flavors you love without the preservatives. Try it and taste the difference!","serving":"3","price":"180","sold":"7526","image":"images/2.jpg","standby":true,"value":13,"adding":false,"totalPrice":2340,"success":false,"inCart":13},"Lumpiang Shanghai":{"id":"3","name":"Lumpiang Shanghai","description":"A Chinese delicacy with a Filipino twist! Enjoy our freshly fried spring rolls with our signature dipping sauce. Crunchy and yummy!","serving":"3","price":"150","sold":"556","image":"images/3.jpg","standby":true,"value":27,"adding":false,"totalPrice":4050,"success":false,"inCart":27}}');
+
+
+
 			$scope.length = Object.keys($scope.orders).length;
 			$scope.receiver = $localStorage.user;
 			$scope.deliveryInformation = {
@@ -174,7 +180,6 @@ app.controller('cartCtr', ['$rootScope', '$scope', '$http', '$localStorage', '$t
 					}).
 					success(function (res) {
 						if (res === '1') {
-							alert();
 							$timeout(function () {
 								$scope.loading = false;
 								$scope.orderMsg = 'Order confirmed! Expect your delivery at around 30 minutes. (Make sure you or someone is there to pick it up)'

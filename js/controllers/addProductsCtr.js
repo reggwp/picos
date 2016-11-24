@@ -18,7 +18,7 @@ app.controller('addProductsCtr', ['$rootScope', '$scope', '$http', '$localStorag
 
 
 		$scope.$on('passImage', function (event, data, where) {
-			document.getElementById('image-preview-' + where).src = data;
+			document.getElementById(where === '' ? 'image-preview-edit-na' : 'image-preview-' + where).src = data;	
 		});
 
 
@@ -41,6 +41,7 @@ app.controller('addProductsCtr', ['$rootScope', '$scope', '$http', '$localStorag
 					row.loading = true;
 					row.standby = false;
 					row.image = document.getElementById('image-preview-' + index).src;
+					row.dateupdated = new Date();
 					$http({
 					    method: 'POST',
 					    url: '../php/addProduct.php',
