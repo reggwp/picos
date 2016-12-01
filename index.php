@@ -118,6 +118,7 @@
 					<div class="col-sm-4">
 						<div class="register">
 							<h3>Register</h3>
+							<div ng-cloak ng-if="failedRegister" class="cr mt5"><center>Please provide correct and complete information</center><br/></div>
 							<span ng-cloak ng-if="notification" style="font-weight: bold;">{{notification}}<br/><br/></span>
 							<input ng-class="{'invalid_cred_register' : !register.username}" type="text" placeholder="Set new username" class="form-control mb-5" ng-model="register.username">
 							<input type="text" placeholder="Set new first name" class="form-control mb-5" ng-model="register.firstname">
@@ -147,7 +148,7 @@
 			  <div class="container-fluid">
 			    <!-- Brand and toggle get grouped for better mobile display -->
 			    <div class="navbar-header">
-			      <a class="navbar-brand" href="" ng-click="viewProducts()">Pico's Restobar</a>
+			      <a class="navbar-brand" href="" ng-click="refreshAndViewProducts()">Pico's Restobar</a>
 			      <a ng-cloak ng-if="!user.isAdmin" class="btn btn-success btn-sm view_cart_btn" href="#" class="" ng-click="viewCart()"><i class="fa fa-shopping-cart"></i> View cart</a>
 			      <ul class="nav navbar-nav navbar-right pull-right">
 			        <li class="dropdown">

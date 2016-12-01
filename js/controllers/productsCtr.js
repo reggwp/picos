@@ -60,6 +60,9 @@ app.controller('productsCtr', ['$rootScope', '$scope', '$http', '$localStorage',
 		$scope.prepDeleteProduct = function (product, decoyIndex) {
 			$scope.tbd = product;
 			$scope.decoyIndex = decoyIndex;
+
+			console.log($scope.tbd)
+			console.log($scope.decoyIndex)
 		};
 
 		$scope.prepEditProduct = function (product) {

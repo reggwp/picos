@@ -5,7 +5,8 @@ app.controller('createAdminAccountCtr', ['$rootScope', '$scope', '$http', '$loca
 			'',
 			'New admin record created successfully!',
 			'Something went wrong! Please try again later.',
-			'Admin record already exists. Please try another email.'
+			'Admin record already exists. Please try another email.',
+			'Please provide correct and complete information'
 		];
 
 		$scope.$watch('$parent.showCreateAdminAccount', function () {
@@ -20,6 +21,7 @@ app.controller('createAdminAccountCtr', ['$rootScope', '$scope', '$http', '$loca
 
 		$scope.confirmCreateAdminAccount = function () {
 			if (!document.getElementsByClassName('invalid_cred_newadmin').length) {
+				$scope.notification = null;
 				$http({
 				    method: 'POST',
 				    url: '../php/registerAdmin.php',
@@ -40,6 +42,9 @@ app.controller('createAdminAccountCtr', ['$rootScope', '$scope', '$http', '$loca
 						$scope.notification = $scope.notifications[3];	
 					}
 				})
+			}
+			else {
+				$scope.notification = $scope.notifications[4];
 			}
 		};
 

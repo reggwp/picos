@@ -1,6 +1,7 @@
 app.controller('loginAndRegistrationCtr', ['$rootScope', '$scope', '$http', '$localStorage', '$timeout',
 	function ($rootScope, $scope, $http, $localStorage, $timeout) {
 
+		$scope.failedRegister = false;
 		$scope.loggedIn = false;
 		$scope.login = true;
 		$scope.loginMsg = 'Login';
@@ -97,7 +98,7 @@ app.controller('loginAndRegistrationCtr', ['$rootScope', '$scope', '$http', '$lo
 		$scope.registerUser = function () {
 			$scope.notification = null;
 			if (!document.getElementsByClassName('invalid_cred_register').length) {
-
+				$scope.failedRegister = false;
 				$http({
 				    method: 'POST',
 				    url: '../php/register.php',
@@ -117,6 +118,9 @@ app.controller('loginAndRegistrationCtr', ['$rootScope', '$scope', '$http', '$lo
 						$scope.notification = $scope.notifications[3];	
 					}
 				})
+			}
+			else {
+				$scope.failedRegister = true;
 			}
 		};
 

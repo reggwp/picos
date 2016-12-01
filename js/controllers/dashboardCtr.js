@@ -17,6 +17,12 @@ app.controller('dashboardCtr', ['$rootScope', '$scope', '$http', '$localStorage'
 		});
 
 
+		$scope.refreshAndViewProducts = function () {
+			window.location.reload();
+			$scope.viewProducts();
+		};
+
+
 		$scope.resetter = function () {
 			$scope.showEditAccount = false;
 			$scope.loginCtr.loggedIn = false;
