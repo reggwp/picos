@@ -113,26 +113,29 @@ app.controller('productsCtr', ['$rootScope', '$scope', '$http', '$localStorage',
 					$scope.tbe.id = parseInt($scope.tbe.id);
 					$scope.tbe.serving = parseInt($scope.tbe.serving);
 					$scope.tbe.price = parseInt($scope.tbe.price);
+					$scope.tbe.datenow = new Date().toString();
 
-					if (!$scope.showAngularImage) {
+					if (!$scope.showAngularImage) {	
 						$scope.tbe.image = document.getElementById('image-preview-edit-na').src;
 					}
 
-					$http({
-					    method: 'POST',
-					    url: '../php/updateProduct.php',
-					    data: $scope.tbe,
-					    headers: {'Content-Type': 'application/x-www-form-urlencoded'}
-					}).
-					success(function (res) {
-						console.log(res)
-						console.log(typeof res)
-						if (res === '1') {
-							$rootScope.$broadcast('viewProducts');
-							angular.element('#editProduct').modal('hide');
-						}
-					});
+					console.log($scope.tbe)
 
+					$timeout(function () {
+						$http({
+						    method: 'POST',
+						    url: '../php/updateProduct.php',
+						    data: $scope.tbe,
+						    headers: {'Content-Type': 'application/x-www-form-urlencoded'}
+						}).
+						success(function (res) {
+							if (res === '1') {
+								$rootScope.$broadcast('viewProducts');
+								angular.element('#editProduct').modal('hide');
+							}
+						});
+					});
+					
 				}
 			});
 		};

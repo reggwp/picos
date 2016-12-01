@@ -198,7 +198,7 @@
 					<div class="add_products">
 
 						<div class="row">
-							<div class="col-sm-6"><h3>Add new products</h3></div>
+							<div class="col-sm-6"><h3>Add new products</h3><small>*Note: Please only add images below 1 Mb size.</small></div>
 							<div class="col-sm-2 pr-5"><button ng-disabled="disableSubmitAll" ng-cloak ng-if="newProducts.length" class="btn btn-warning add_row" ng-click="clearAllRows()"><i class="fa fa-minus"></i> Clear all</button></div>
 							<div class="col-sm-2 pr-5 pl-5"><button ng-disabled="disableSubmitAll" ng-cloak ng-if="newProducts.length" class="btn btn-danger add_row" ng-click="removeAllRows()"><i class="fa fa-times"></i> Remove all</button></div>
 							<div class="col-sm-2 pl-5"><button ng-disabled="disableSubmitAll" class="btn btn-primary add_row" ng-click="addAnotherRow()"><i class="fa fa-plus"></i> Add row</button></div>
@@ -283,6 +283,7 @@
 			      <div class="modal-header">
 			        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
 			        <h4 class="modal-title" id="myModalLabel">Edit Product</h4>
+			        <small>*Note: Please only add images below 1 Mb size.</small>
 			      </div>
 			      <div class="modal-body">
 			       	
@@ -348,10 +349,52 @@
 			  </div>
 			</div>
 
-			<div class="jumbotron">
-			  	<h1>Menu</h1>
-			  	<p>Our selection of the greatest, tastiest pinoy food!</p>
+
+			<div id="carousel-example-generic" class="carousel slide" data-ride="carousel">
+			  <!-- Indicators -->
+			  <ol class="carousel-indicators">
+			    <li data-target="#carousel-example-generic" data-slide-to="0" class="active"></li>
+			    <li data-target="#carousel-example-generic" data-slide-to="1"></li>
+			    <li data-target="#carousel-example-generic" data-slide-to="2"></li>
+			    <li data-target="#carousel-example-generic" data-slide-to="3"></li>
+			    <li data-target="#carousel-example-generic" data-slide-to="4"></li>
+			    <li data-target="#carousel-example-generic" data-slide-to="5"></li>
+			    <li data-target="#carousel-example-generic" data-slide-to="6"></li>
+			    <li data-target="#carousel-example-generic" data-slide-to="7"></li>
+			    
+			  </ol>
+
+			  <!-- Wrapper for slides -->
+			  <div class="carousel-inner" role="listbox">
+			    <div class="item active">
+			      <img src="../images/p/7.jpg" class="carousel-image-adjust">
+			      <div class="carousel-caption">
+			        <h1>Welcome to Pico's Restobar</h1>
+			        <h4>Enjoy our selection of the greatest, tastiest pinoy food!</h4>
+			      </div>
+			    </div>
+			    <div class="item"><img src="../images/p/1.jpg" class="carousel-image-adjust"></div>
+			    <div class="item"><img src="../images/p/2.jpg" class="carousel-image-adjust"></div>
+			    <div class="item"><img src="../images/p/3.jpg" class="carousel-image-adjust"></div>
+			    <div class="item"><img src="../images/p/4.jpg" class="carousel-image-adjust"></div>
+			    <div class="item"><img src="../images/p/5.jpg" class="carousel-image-adjust"></div>
+			    
+			    <div class="item"><img src="../images/p/8.jpg" class="carousel-image-adjust"></div>
+			    <div class="item"><img src="../images/p/12.jpg" class="carousel-image-adjust"></div>
+			  </div>
+
+			  <!-- Controls -->
+			  <a class="left carousel-control" href="#carousel-example-generic" role="button" data-slide="prev">
+			    <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
+			    <span class="sr-only">Previous</span>
+			  </a>
+			  <a class="right carousel-control" href="#carousel-example-generic" role="button" data-slide="next">
+			    <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
+			    <span class="sr-only">Next</span>
+			  </a>
 			</div>
+
+
 			<div class="container">
 				<div class="row">
 					<div class="col-sm-8">
@@ -436,7 +479,7 @@
 									</div>
 								</div>
 
-								<div ng-cloak ng-if="!user.isAdmin && product.isOutOfStock === '1'">
+								<div ng-cloak ng-if="!user.isAdmin && product.isOutOfStock === '1'" style="margin-top: 44px;">
 									<button class="btn btn-danger w100" disabled>Currently out of stock</button>
 								</div>
 
