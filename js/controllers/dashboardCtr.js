@@ -14,6 +14,7 @@ app.controller('dashboardCtr', ['$rootScope', '$scope', '$http', '$localStorage'
 
 		$scope.$on('viewProducts', function () {
 			$scope.viewProducts();
+			$scope.getUnviewed();
 		});
 
 
@@ -47,6 +48,7 @@ app.controller('dashboardCtr', ['$rootScope', '$scope', '$http', '$localStorage'
 			$scope.showFeedback = false;
 			$scope.showOrdersTable = false;
 			$scope.showRequestReservation = false;
+			$scope.showReservationsTable = false;
 		};
 
 		$scope.setUpdatePassword = function () {
@@ -59,6 +61,7 @@ app.controller('dashboardCtr', ['$rootScope', '$scope', '$http', '$localStorage'
 			$scope.showFeedback = false;
 			$scope.showOrdersTable = false;
 			$scope.showRequestReservation = false;
+			$scope.showReservationsTable = false;
 		};
 
 		$scope.setNewAdminAccount = function () {
@@ -71,6 +74,7 @@ app.controller('dashboardCtr', ['$rootScope', '$scope', '$http', '$localStorage'
 			$scope.showFeedback = false;
 			$scope.showOrdersTable = false;
 			$scope.showRequestReservation = false;
+			$scope.showReservationsTable = false;
 		};
 
 		$scope.viewProducts = function () {
@@ -83,6 +87,7 @@ app.controller('dashboardCtr', ['$rootScope', '$scope', '$http', '$localStorage'
 			$scope.showFeedback = false;
 			$scope.showOrdersTable = false;
 			$scope.showRequestReservation = false;
+			$scope.showReservationsTable = false;
 			$scope.getProducts();
 		};
 
@@ -96,6 +101,7 @@ app.controller('dashboardCtr', ['$rootScope', '$scope', '$http', '$localStorage'
 			$scope.showFeedback = false;
 			$scope.showOrdersTable = false;
 			$scope.showRequestReservation = false;
+			$scope.showReservationsTable = false;
 		};
 
 		$scope.addNewProducts = function () {
@@ -108,6 +114,7 @@ app.controller('dashboardCtr', ['$rootScope', '$scope', '$http', '$localStorage'
 			$scope.showFeedback = false;
 			$scope.showOrdersTable = false;
 			$scope.showRequestReservation = false;
+			$scope.showReservationsTable = false;
 		};
 
 		$scope.viewSendFeedback = function () {
@@ -120,6 +127,8 @@ app.controller('dashboardCtr', ['$rootScope', '$scope', '$http', '$localStorage'
 			$scope.showFeedback = true;
 			$scope.showOrdersTable = false;
 			$scope.showRequestReservation = false;
+			$scope.showReservationsTable = false;
+			$scope.setFeedbacksToViewed();
 		};
 
 		$scope.viewOrdersTable = function () {
@@ -132,6 +141,8 @@ app.controller('dashboardCtr', ['$rootScope', '$scope', '$http', '$localStorage'
 			$scope.showFeedback = false;
 			$scope.showOrdersTable = true;
 			$scope.showRequestReservation = false;
+			$scope.showReservationsTable = false;
+			$scope.setOrdersToViewed();
 		};
 
 		$scope.viewRequestReservation = function () {
@@ -144,6 +155,21 @@ app.controller('dashboardCtr', ['$rootScope', '$scope', '$http', '$localStorage'
 			$scope.showFeedback = false;
 			$scope.showOrdersTable = false;
 			$scope.showRequestReservation = true;
+			$scope.showReservationsTable = false;
+		};
+
+		$scope.viewReservationsTable = function () {
+			$scope.showUpdatePassword = false;
+			$scope.showEditAccount = false;
+			$scope.showCreateAdminAccount = false;
+			$scope.showProducts = false;
+			$scope.showCart = false;
+			$scope.showAddProducts = false;
+			$scope.showFeedback = false;
+			$scope.showOrdersTable = false;
+			$scope.showRequestReservation = false;
+			$scope.showReservationsTable = true;
+			$scope.setReservationsToViewed();
 		};
 
 		$scope.getProducts = function () {
@@ -174,8 +200,61 @@ app.controller('dashboardCtr', ['$rootScope', '$scope', '$http', '$localStorage'
 			});
 		};
 
+		$scope.getUnviewed = function () {
+			$http({
+			    method: 'GET',
+			    url: '../php/getUnviewed.php',
+			    headers: {'Content-Type': 'application/x-www-form-urlencoded'}
+			}).
+			success(function (res) {
+				if (typeof res === 'object') {
+					$scope.notifications = res;
+				}
+				console.log($scope.notifications);
+			});
+		};
+
+		$scope.setFeedbacksToViewed = function () {
+			$http({
+			    method: 'GET',
+			    url: '../php/setFeedbacksToViewed.php',
+			    headers: {'Content-Type': 'application/x-www-form-urlencoded'}
+			}).
+			success(function (res) {
+				if (res === '1') {
+					$scope.notifications.feedbacks = [];
+				}
+			});
+		};
+
+		$scope.setOrdersToViewed = function () {
+			$http({
+			    method: 'GET',
+			    url: '../php/setOrdersToViewed.php',
+			    headers: {'Content-Type': 'application/x-www-form-urlencoded'}
+			}).
+			success(function (res) {
+				if (res === '1') {
+					$scope.notifications.orders = [];
+				}
+			});
+		};
+
+		$scope.setReservationsToViewed = function () {
+			$http({
+			    method: 'GET',
+			    url: '../php/setReservationsToViewed.php',
+			    headers: {'Content-Type': 'application/x-www-form-urlencoded'}
+			}).
+			success(function (res) {
+				if (res === '1') {
+					$scope.notifications.reservations = [];
+				}
+			});
+		};
 
 		$scope.viewProducts();
+		$scope.getUnviewed();
 
 	}]
 )

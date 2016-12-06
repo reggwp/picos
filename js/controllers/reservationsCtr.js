@@ -3,7 +3,6 @@ app.controller('reservationsCtr', ['$rootScope', '$scope', '$http', '$localStora
 
 		$scope.$watch('$parent.showRequestReservation', function () {
 			
-
 			if ($scope.$parent.showRequestReservation) {
 				
 				localStorage.captchaValidatedReservation = false;
@@ -99,6 +98,7 @@ app.controller('reservationsCtr', ['$rootScope', '$scope', '$http', '$localStora
 				    data: {
 				    	code: code,
 				    	email: $scope.reserver.email,
+				    	type: 'reservation'
 				    },
 				    headers: {'Content-Type': 'application/x-www-form-urlencoded'}
 				}).
@@ -114,7 +114,6 @@ app.controller('reservationsCtr', ['$rootScope', '$scope', '$http', '$localStora
 				});
 			}
 			else {
-				alert();
 				$scope.checkTime();
 				$scope.checkDate();
 				$scope.generalConfirmMsg = 'Please fill out all the necessary information for your reservation.';
@@ -137,16 +136,19 @@ app.controller('reservationsCtr', ['$rootScope', '$scope', '$http', '$localStora
 			var products = [];
 			$scope.checkTime();
 			$scope.checkDate();
+			$scope.reservationInfo.email = $scope.reserver.email;
 			$scope.reservationInfo.name = $scope.reservationInfo.ownName ? $scope.reserver.firstname + ' ' +$scope.reserver.lastname : $scope.new.name;
 			$scope.reservationInfo.contact = $scope.reservationInfo.ownContact ? $scope.reserver.contact : $scope.new.contact;
 			$scope.reservationInfo.occasionType = $scope.occasion.name;
 
 			angular.forEach($scope.products, function (product) {
-				products.push({
-					id: product.id,
-					name: product.name,
-					reservedQuantity: parseInt(product.reservedQuantity)
-				});
+				if (parseInt(product.reservedQuantity)) {
+					products.push({
+						id: product.id,
+						name: product.name,
+						reservedQuantity: parseInt(product.reservedQuantity)
+					});
+				}
 			});
 
 			$scope.reservationInfo.products = JSON.stringify(products);

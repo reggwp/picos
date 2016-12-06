@@ -15,8 +15,8 @@ if ($conn->connect_error) {
 } 
 
 $content = addslashes($data->products);
-$orders = "INSERT INTO reservations (name, contact, occasiontype, occasionname, persons, arrivaldate, arrivaltime, datereserved, requests, food, status)
-			VALUES ('$data->name', '$data->contact', '$data->occasionType', '$data->occasionName', '$data->persons', '$data->date', '$data->time', '$data->dateReserved', '$data->request', '$content', '$data->status')";
+$orders = "INSERT INTO reservations (name, email, contact, occasiontype, occasionname, persons, arrivaldate, arrivaltime, datereserved, requests, food, status, isViewed)
+		VALUES ('$data->name', '$data->email', '$data->contact', '$data->occasionType', '$data->occasionName', '$data->persons', '$data->date', '$data->time', '$data->dateReserved', '$data->request', '$content', '$data->status', 0)";
 $result = mysqli_query($conn, $orders);
 
 foreach ($data->cleanProducts as $order) {

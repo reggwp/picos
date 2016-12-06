@@ -14,17 +14,16 @@ app.controller('cartCtr', ['$rootScope', '$scope', '$http', '$localStorage', '$t
 			if ($scope.$parent.showCart) {
 				$scope.resetter();
 			}
+			$scope.showSendEmailConfirmation = true;
+			$scope.showConfirmCodeField = false;
+			$scope.showConfirmOrder = false;
 		});
 
 		$scope.resetter = function () {
 			localStorage.captchaValidated = false;
 			
-
-
 			$scope.orders = $rootScope.currentOrders;
 			// $scope.orders = JSON.parse('{"Pork Adobo":{"id":"1","name":"Pork Adobo","description":"A staple of Filipino cuisine. The pork adobo is the Philippines\' national dish. Taste it and you\'ll see why.","serving":"3","price":"200","sold":"1422","image":"images/1.jpg","standby":true,"value":2,"adding":false,"totalPrice":400,"success":false,"inCart":2},"Pancit Canton":{"id":"2","name":"Pancit Canton","description":"Our best-selling noodle dish. Our pancit canton has all the great flavors you love without the preservatives. Try it and taste the difference!","serving":"3","price":"180","sold":"7526","image":"images/2.jpg","standby":true,"value":13,"adding":false,"totalPrice":2340,"success":false,"inCart":13},"Lumpiang Shanghai":{"id":"3","name":"Lumpiang Shanghai","description":"A Chinese delicacy with a Filipino twist! Enjoy our freshly fried spring rolls with our signature dipping sauce. Crunchy and yummy!","serving":"3","price":"150","sold":"556","image":"images/3.jpg","standby":true,"value":27,"adding":false,"totalPrice":4050,"success":false,"inCart":27}}');
-
-
 
 			$scope.length = Object.keys($scope.orders).length;
 			$scope.receiver = $localStorage.user;
@@ -104,7 +103,7 @@ app.controller('cartCtr', ['$rootScope', '$scope', '$http', '$localStorage', '$t
 
 		$scope.checkTime = function () {
 			// '01/01/2011 is arbitrary its's just used for datetime conversion
-			console.log($scope.new.time)
+			
 			var dt = Date.parse('01/01/2011 ' + $scope.new.time + ':00'),
 				ct = Date.parse('01/01/2011 ' + timeNow() + ':00');
 
@@ -113,9 +112,6 @@ app.controller('cartCtr', ['$rootScope', '$scope', '$http', '$localStorage', '$t
 			}
 			else {
 				if (dt >= ct) {
-					console.log(dt)
-					console.log(ct)
-					console.log(dt - ct)
 					if (dt - ct >= 1800000) {
 					    $scope.finalInfo.desiredTime = $scope.new.time;
 					    $scope.timeError = null;
@@ -147,6 +143,61 @@ app.controller('cartCtr', ['$rootScope', '$scope', '$http', '$localStorage', '$t
 			}
 		};
 
+
+		$scope.sendEmailConfirmation = function () {
+			// checks if there is internet connection, if there is, use captcha, if not, disregards captcha
+			var captchaPassed = navigator.onLine ? (localStorage.captchaValidated === "true") : true;
+			// ======================================================================================================
+
+			$scope.generalConfirmMsg = null;
+			$scope.emailSendFailMsg = null;
+
+			if (!document.getElementsByClassName('invalid_cred_cart').length && captchaPassed) {
+
+				$scope.sendingEmail = true;
+				var code = Math.floor(Math.random()*90000) + 10000;
+				$scope.savedCode = code;
+
+				$http({
+				    method: 'POST',
+				    url: '../php/emailer.php',
+				    data: {
+				    	code: code,
+				    	email: $scope.receiver.email,
+				    	type: 'order'
+				    },
+				    headers: {'Content-Type': 'application/x-www-form-urlencoded'}
+				}).
+				success(function (res) {
+					if (res === 'Message has been sent') {
+						$scope.showConfirmCodeField = true;
+						$scope.showSendEmailConfirmation = false;
+					}
+					else {
+						$scope.emailSendFailMsg = 'Oops! Something went wrong! Please try again later.';
+					}
+					$scope.sendingEmail = false;
+				});
+			}
+			else {
+				$scope.checkTime();
+				$scope.generalConfirmMsg = 'Please fill out all the necessary information for your order.';
+			}
+
+		};
+
+
+
+		$scope.confirmCode = function (code) {
+			if (code === $scope.savedCode.toString()) {
+				$scope.invalidCode = false;
+				$scope.showConfirmCodeField = false;
+				$scope.showConfirmOrder = true;
+			}
+			else {
+				$scope.invalidCode = true;
+			}
+		};
 
 
 		$scope.confirmOrder = function () {

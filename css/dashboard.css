@@ -116,3 +116,19 @@ input[type="file"] {
 .carousel {
 	margin-bottom: 25px;
 }
+
+.dash-notification {
+	position: absolute;
+	left: 170px;
+    top: 14px;
+}
+
+.dash-notification a {
+	text-decoration: none;
+	color: white;
+	margin-right: 20px;
+}
+
+.dash-notification span {
+	background: red;
+}

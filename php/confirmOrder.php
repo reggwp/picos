@@ -17,7 +17,7 @@ if ($conn->connect_error) {
 } 
 
 $content = addslashes($data->orders);
-$orders = "INSERT INTO orders (orders, referrer, name, contact, location, timedesired, timeordered, amount, grandtotal, status) VALUES ('$content', '$data->referrer', '$data->name', '$data->contact', '$data->location', '$data->desiredTime', '$data->datetimeOfOrder', '$data->money', '$data->grandtotal', '$data->status')";
+$orders = "INSERT INTO orders (orders, referrer, name, contact, location, timedesired, timeordered, amount, grandtotal, status, isViewed) VALUES ('$content', '$data->referrer', '$data->name', '$data->contact', '$data->location', '$data->desiredTime', '$data->datetimeOfOrder', '$data->money', '$data->grandtotal', '$data->status', 0)";
 $result = mysqli_query($conn, $orders);
 
 foreach ($data->cleanOrders as $order) {

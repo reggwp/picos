@@ -15,14 +15,6 @@ if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 } 
 
-// var_dump($data->name);
-// var_dump($data->description);
-// var_dump($data->serving);
-// var_dump($data->price);
-// var_dump($data->image);
-// var_dump($data->datenow);
-// var_dump($data->id);
-
 $updateProduct = "UPDATE products
 				  SET name = '".$data->name."',
 				  description = '".$data->description."',

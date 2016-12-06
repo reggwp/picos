@@ -23,6 +23,8 @@
 	<script type="text/javascript" src="js/controllers/sendFeedbackCtr.js"></script>
 	<script type="text/javascript" src="js/controllers/ordersTableCtr.js"></script>
 	<script type="text/javascript" src="js/controllers/reservationsCtr.js"></script>
+	<script type="text/javascript" src="js/controllers/reservationsTableCtr.js"></script>
+	
 
 	<!-- SERVICES -->
 	<script type="text/javascript" src="js/services/hashService.js"></script>
@@ -149,7 +151,27 @@
 			    <!-- Brand and toggle get grouped for better mobile display -->
 			    <div class="navbar-header">
 			      <a class="navbar-brand" href="" ng-click="refreshAndViewProducts()">Pico's Restobar</a>
+
+
+
+			    <div class="dash-notification" ng-cloak ng-if="user.isAdmin">
+			      	<a href="#" class="pull-right" data-toggle="tooltip" title="Feedbacks" ng-click="viewSendFeedback()">
+			      		<i class="fa fa-comments"></i> 
+			      		<span ng-cloak ng-if="notifications.feedbacks.length" class="badge">{{notifications.feedbacks.length}}</span>
+			      	</a>
+					<a href="#" class="pull-right" data-toggle="tooltip" title="Reservations" ng-click="viewReservationsTable()">
+					<i class="fa fa-bell"></i> 
+						<span ng-cloak ng-if="notifications.reservations.length" class="badge">{{notifications.reservations.length}}</span>
+					</a>
+					<a href="#" class="pull-right" data-toggle="tooltip" title="Orders" ng-click="viewOrdersTable()">
+					<i class="fa fa-envelope"></i> 
+						<span ng-cloak ng-if="notifications.orders.length" class="badge badge-alert">{{notifications.orders.length}}</span>
+					</a>
+				</div>
+
+
 			      <a ng-cloak ng-if="!user.isAdmin" class="btn btn-success btn-sm view_cart_btn" href="#" class="" ng-click="viewCart()"><i class="fa fa-shopping-cart"></i> View cart</a>
+
 			      <ul class="nav navbar-nav navbar-right pull-right">
 			        <li class="dropdown">
 			          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Welcome, {{user.username}} <span class="caret"></span></a>
@@ -161,15 +183,15 @@
 						<li ng-cloak ng-if="user.isAdmin"><a href="" ng-click="setNewAdminAccount()"><i class="fa fa-user-secret"></i> Create new admin account</a></li>
 
 						<li ng-cloak ng-if="!user.isAdmin"><a href="" ng-click="viewSendFeedback()"><i class="fa fa-comment"></i> Send feedback</a></li>
-						<li ng-cloak ng-if="user.isAdmin"><a href="" ng-click="viewSendFeedback()"><i class="fa fa-comment"></i> View customer feedbacks</a></li>
+						<li ng-cloak ng-if="user.isAdmin"><a href="" ng-click="viewSendFeedback()"><i class="fa fa-comment"></i> View customer feedbacks <span ng-cloak ng-if="notifications.feedbacks.length" class="badge">{{notifications.feedbacks.length}}</span></a></li>
 
 						
 						<li ng-cloak ng-if="!user.isAdmin"><a href="" ng-click="viewOrdersTable()"><i class="fa fa-list"></i> View my orders</a></li>
-						<li ng-cloak ng-if="user.isAdmin"><a href="" ng-click="viewOrdersTable()"><i class="fa fa-list"></i> View customer orders</a></li>
+						<li ng-cloak ng-if="user.isAdmin"><a href="" ng-click="viewOrdersTable()"><i class="fa fa-list"></i> View customer orders <span ng-cloak ng-if="notifications.orders.length" class="badge">{{notifications.orders.length}}</span></a></li>
 
 						<li ng-cloak ng-if="!user.isAdmin"><a href="" ng-click="viewRequestReservation()"><i class="fa fa-clock-o"></i> Make a reservation</a></li>
-						<li ng-cloak ng-if="!user.isAdmin"><a href="" ng-click="viewMyReservations()"><i class="fa fa-th-list"></i> View my reservations</a></li>
-						<li ng-cloak ng-if="user.isAdmin"><a href="" ng-click="viewReservationsTable()"><i class="fa fa-th-list"></i> View customer reservations</a></li>
+						<li ng-cloak ng-if="!user.isAdmin"><a href="" ng-click="viewReservationsTable()"><i class="fa fa-th-list"></i> View my reservations</a></li>
+						<li ng-cloak ng-if="user.isAdmin"><a href="" ng-click="viewReservationsTable()"><i class="fa fa-th-list"></i> View customer reservations <span ng-cloak ng-if="notifications.reservations.length" class="badge">{{notifications.reservations.length}}</span></a></li>
 
 
 			            <li ng-cloak ng-if="!user.isAdmin" role="separator" class="divider"></li>
@@ -461,7 +483,7 @@
 								<div ng-cloak ng-if="!user.isAdmin && product.isOutOfStock === '0'">
 									<div class="row">
 										<div class="col-sm-6">
-											<input type="number" name="input" ng-model="product.value" min="1" max="999" required class="form-control" placeholder="Quantity">
+											<input type="number" name="input" ng-model="product.value" min="1" max="100" required class="form-control" placeholder="Quantity">
 										</div>
 										<div class="col-sm-6">
 											<div class="total"><span>Total: </span><span class="total_price">{{product.price * product.value | currency:"₱"}}</span></div>
@@ -564,7 +586,7 @@
 										<input ng-class="{'invalid_cred_cart' : !new.location}" ng-cloak ng-if="!deliveryInformation.ownLocation" type="text" class="form-control" ng-model="new.location">
 									</div>
 									<div class="col-sm-6">
-										<label for="changeFor">Desired date and time of delivery</label><br/>
+										<label for="changeFor">Desired time of delivery</label><br/>
 										<input  ng-class="{'invalid_cred_cart' : timeError || !new.time}" id="deliveryTime" type="time" class="form-control" ng-model="new.time">
 										<small class="cr" ng-cloak ng-if="timeError">{{timeError}}</small>
 									</div>
@@ -594,8 +616,42 @@
 										<div class="orderMsg" ng-cloak ng-if="orderMsg">{{orderMsg}}</div>
 
 										<div ng-cloak ng-if="standby">
-											<button class="btn btn-success btn-lg w100" ng-click="confirmOrder()">Confirm Order</button>
-											<center ng-cloak ng-if="generalConfirmMsg"><br/><small class="cr">{{generalConfirmMsg}}</small></center>
+
+
+											<div ng-cloak ng-if="showSendEmailConfirmation">
+												<button ng-disabled="sendingEmail" class="btn btn-primary btn-lg w100" ng-click="sendEmailConfirmation()">
+													<span ng-cloak ng-if="!sendingEmail">Send Email confirmation</span>
+													<span ng-cloak ng-if="sendingEmail">Sending Email confirmation to {{receiver.email}}...</span>
+												</button>
+												<center ng-cloak ng-if="generalConfirmMsg"><br/><small class="cr">{{generalConfirmMsg}}</small></center>
+												<center ng-cloak ng-if="emailSendFailMsg"><br/><small class="cr">{{emailSendFailMsg}}</small></center>
+											</div>
+											<div ng-cloak ng-if="showConfirmCodeField">
+												<div class="row">
+													<div class="col-sm-3">&nbsp;</div>
+													<div class="col-sm-6">
+														<div class="row">
+															<div class="col-sm-6">
+																<input ng-class="{'invalid_cred_reservation' : userConfirmCode !== savedCode.toString()}" type="text" class="form-control" ng-model="userConfirmCode">
+															</div>
+															<div class="col-sm-6">
+																<button class="btn btn-success w100" ng-click="confirmCode(userConfirmCode)">Confirm code</button>
+															</div>
+														</div>
+													</div>
+													<div class="col-sm-3">&nbsp;</div>
+													<div class="col-sm-12"><center><br/><small>*If it's not in your inbox, check your spam folder.</small></center></div>
+													<div ng-cloak ng-if="invalidCode" class="col-sm-12"><center><br/><small class="cr">Invalid code</small></center></div>
+												</div>
+											</div>
+											<div ng-cloak ng-if="showConfirmOrder">
+												<button class="btn btn-success btn-lg w100" ng-click="confirmOrder()">Confirm Order</button>
+												<center ng-cloak ng-if="generalConfirmMsg"><br/><small class="cr">{{generalConfirmMsg}}</small></center>
+											</div>
+
+
+
+											
 										</div>
 
 									</div>
@@ -725,6 +781,7 @@
 											<span ng-cloak ng-if="!sendingEmail">Send Email confirmation</span>
 											<span ng-cloak ng-if="sendingEmail">Sending Email confirmation to {{reserver.email}}...</span>
 										</button>
+										<center ng-cloak ng-if="generalConfirmMsg"><br/><small class="cr">{{generalConfirmMsg}}</small></center>
 										<center ng-cloak ng-if="emailSendFailMsg"><br/><small class="cr">{{emailSendFailMsg}}</small></center>
 									</div>
 									<div ng-cloak ng-if="showConfirmCodeField">
@@ -741,6 +798,7 @@
 												</div>
 											</div>
 											<div class="col-sm-3">&nbsp;</div>
+											<div class="col-sm-12"><center><br/><small>*If it's not in your inbox, check your spam folder.</small></center></div>
 											<div ng-cloak ng-if="invalidCode" class="col-sm-12"><center><br/><small class="cr">Invalid code</small></center></div>
 										</div>
 									</div>
@@ -759,6 +817,122 @@
 					</div>
 				</div>
 				<div class="col-sm-2">&nbsp;</div>
+			</div>
+		</div>
+
+
+
+
+
+
+
+
+		<!-- RESERVATIONS TABLE -->
+		<div ng-cloak ng-show="showReservationsTable" ng-controller="reservationsTableCtr">
+			<div class="row">
+				<div class="col-sm-1">&nbsp;</div>
+				<div class="col-sm-10">
+					<div class="reservationsTable">
+
+						<div class="row">
+							<div class="col-sm-6">
+								<h3 ng-cloak ng-if="!user.isAdmin">My reservations</h3>
+								<h3 ng-cloak ng-if="user.isAdmin">Customer reservations</h3><br/>
+							</div>
+							<div class="col-sm-4">
+								<input type="text" class="form-control" placeholder="Filter reservations" ng-model="filterReservations">
+							</div>
+							<div class="col-sm-2">
+								<select ng-options="item as item.name for item in statuses" ng-model="status" ng-change="sortStatusBy(status)" class="form-control"></select>
+							</div>
+						</div>
+
+						<div ng-cloak ng-if="!reservations.length"><center>{{filterMsg}}</center></div>
+
+						<table ng-cloak ng-if="reservations.length" class="table table-hovered">
+							<thead>
+								<tr>
+									<td class="cp" ng-click="sortType = 'name'; sortReverse = !sortReverse">
+										<b>Reserver</b>
+										<span ng-show="sortType == 'name' && !sortReverse" class="fa fa-caret-down"></span>
+    									<span ng-show="sortType == 'name' && sortReverse" class="fa fa-caret-up"></span>
+									</td>
+									<td class="cp" ng-click="sortType = 'contact'; sortReverse = !sortReverse">
+										<b>Contact</b>
+										<span ng-show="sortType == 'contact' && !sortReverse" class="fa fa-caret-down"></span>
+    									<span ng-show="sortType == 'contact' && sortReverse" class="fa fa-caret-up"></span>
+									</td>
+									<td class="cp" ng-click="sortType = 'occasionname'; sortReverse = !sortReverse">
+										<b>Occasion</b>
+										<span ng-show="sortType == 'occasionname' && !sortReverse" class="fa fa-caret-down"></span>
+    									<span ng-show="sortType == 'occasionname' && sortReverse" class="fa fa-caret-up"></span>
+									</td>
+									<td class="cp" ng-click="sortType = 'occasiontype'; sortReverse = !sortReverse">
+										<b>Type</b>
+										<span ng-show="sortType == 'occasiontype' && !sortReverse" class="fa fa-caret-down"></span>
+    									<span ng-show="sortType == 'occasiontype' && sortReverse" class="fa fa-caret-up"></span>
+									</td>
+									<td class="cp" ng-click="sortType = 'food'; sortReverse = !sortReverse">
+										<b>Orders</b>
+										<span ng-show="sortType == 'food' && !sortReverse" class="fa fa-caret-down"></span>
+    									<span ng-show="sortType == 'food' && sortReverse" class="fa fa-caret-up"></span>
+									</td>
+									<td class="cp" ng-click="sortType = 'persons'; sortReverse = !sortReverse">
+										<b>Persons</b>
+										<span ng-show="sortType == 'persons' && !sortReverse" class="fa fa-caret-down"></span>
+    									<span ng-show="sortType == 'persons' && sortReverse" class="fa fa-caret-up"></span>
+									</td>
+									<td class="cp" ng-click="sortType = 'arrivaldate'; sortReverse = !sortReverse">
+										<b>Arrival</b>
+										<span ng-show="sortType == 'arrivaldate' && !sortReverse" class="fa fa-caret-down"></span>
+    									<span ng-show="sortType == 'arrivaldate' && sortReverse" class="fa fa-caret-up"></span>
+									</td>
+									<td class="cp" ng-click="sortType = 'datereserved'; sortReverse = !sortReverse">
+										<b>Reserved</b>
+										<span ng-show="sortType == 'datereserved' && !sortReverse" class="fa fa-caret-down"></span>
+    									<span ng-show="sortType == 'datereserved' && sortReverse" class="fa fa-caret-up"></span>
+									</td>
+									<td class="cp" ng-click="sortType = 'requests'; sortReverse = !sortReverse">
+										<b>Requests</b>
+										<span ng-show="sortType == 'requests' && !sortReverse" class="fa fa-caret-down"></span>
+    									<span ng-show="sortType == 'requests' && sortReverse" class="fa fa-caret-up"></span>
+									</td>
+									<td class="cp" ng-click="sortType = 'status'; sortReverse = !sortReverse">
+										<b>Status</b>
+										<span ng-show="sortType == 'status' && !sortReverse" class="fa fa-caret-down"></span>
+    									<span ng-show="sortType == 'status' && sortReverse" class="fa fa-caret-up"></span>
+									</td>
+									<td ng-cloak ng-if="user.isAdmin">&nbsp;</td>
+								</tr>
+							</thead>
+							<tbody>
+								<tr ng-repeat="reservation in reservations | orderBy:sortType:sortReverse | filter:filterReservations">
+									<td>{{reservation.name}}</td>
+									<td>{{reservation.contact}}</td>
+									<td>{{reservation.occasionname}}</td>
+									<td>{{reservation.occasiontype}}</td>
+									<td>
+										<div ng-repeat="order in reservation.food">
+											{{order.name}} x {{order.reservedQuantity}}
+										</div>
+									</td>
+									<td>{{reservation.persons}}</td>
+									<td>{{reservation.arrivaldate | date:'MMM dd, yyyy'}} {{reservation.arrivaltime}}</td>
+									<td>{{reservation.datereserved | date:'medium'}}</td>
+									<td>{{reservation.requests}}</td>
+									<td><span class="{{reservation.status}}">{{reservation.status}}</span></td>
+									<td ng-cloak ng-if="user.isAdmin">
+										<button ng-click="updateReservationStatus(reservation.id, 'Completed')" ng-cloak ng-if="reservation.status === 'Reserved'" class="btn btn-sm btn-success" title="Reservation completed"><i class="fa fa-check"></i></button>
+										<button ng-click="updateReservationStatus(reservation.id, 'Cancelled')" ng-cloak ng-if="reservation.status === 'Reserved'" class="btn btn-sm btn-danger" title="Reservation cancelled"><i class="fa fa-times"></i></button>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					
+
+					</div>
+				</div>
+				<div class="col-sm-1">&nbsp;</div>
 			</div>
 		</div>
 
@@ -998,10 +1172,15 @@
 		<div ng-cloak ng-show="showFeedback" ng-controller="sendFeedbackCtr">
 
 
-			<div ng-cloal ng-if="respondent.isAdmin" class="row">
+			<div ng-cloak ng-if="respondent.isAdmin" class="row">
 				<div class="col-sm-2">&nbsp;</div>
 				<div class="col-sm-8">
-					<div class="sendFeedback">
+
+					<div ng-cloak ng-if="!feedbacks.length" class="sendFeedback">
+						<center><h3>No feedbacks</h3></center>
+					</div>
+
+					<div ng-cloak ng-if="feedbacks.length" class="sendFeedback">
 						<div>
 							<div class="row">
 								<div class="col-sm-7">
@@ -1011,7 +1190,7 @@
 									<input type="text" class="form-control" placeholder="Filter feedbacks" ng-model="feedbackFilter">
 								</div>
 							</div>
-							<div ng-cloak ng-if="feedbacks.length">
+							<div>
 								<table class="table table-hover">
 									<thead>
 										<tr>
@@ -1041,13 +1220,10 @@
 									</tbody>
 								</table>
 							</div>
-
-							<div ng-cloak ng-if="!feedbacks.length">
-								<center>No feedbacks</center>
-							</div>
-
 						</div>
 					</div>
+
+
 				</div>
 				<div class="col-sm-2">&nbsp;</div>
 			</div>
