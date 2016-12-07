@@ -20,7 +20,7 @@ app.controller('reservationsTableCtr', ['$rootScope', '$scope', '$http', '$local
 
 		$scope.getReservations = function (status) {
 			var user = $scope.user;
-			user.status = status;
+			user.status = $scope.status;
 
 			$http({
 			    method: 'POST',
