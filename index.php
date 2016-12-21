@@ -6,13 +6,14 @@
 	<!-- SCRIPTS -->
 	<script type="text/javascript" src="resources/jquery.js"></script>
 	<script type="text/javascript" src="resources/bootstrap/js/bootstrap.min.js"></script>
+<!-- 	// <script type="text/javascript" src="resources/materialize/js/materialize.min.js"></script> -->
 	<script type="text/javascript" src="resources/angular/angular.min.js"></script>
 	<script type="text/javascript" src="resources/ngStorage/ngStorage.min.js"></script>
 	<script type="text/javascript" src="js/app.js"></script>
 
 	<!-- CONTROLLERS -->
 	<script type="text/javascript" src="js/controllers/mainCtr.js"></script>
-	<script type="text/javascript" src="js/controllers/loginAndRegistrationCtr.js"></script>
+	<!-- // <script type="text/javascript" src="js/controllers/loginAndRegistrationCtr.js"></script> -->
 	<script type="text/javascript" src="js/controllers/dashboardCtr.js"></script>
 	<script type="text/javascript" src="js/controllers/productsCtr.js"></script>
 	<script type="text/javascript" src="js/controllers/cartCtr.js"></script>
@@ -37,6 +38,7 @@
 
 	<!-- STYLESHEETS -->
 	<link rel="stylesheet" type="text/css" href="resources/bootstrap/css/bootstrap.min.css">
+<!-- 	<link rel="stylesheet" type="text/css" href="resources/materialize/css/materialize.min.css"> -->
 	<link rel="stylesheet" type="text/css" href="resources/fontawesome/css/font-awesome.min.css">
 	<link rel="stylesheet" type="text/css" href="css/navbar.css">
 	<link rel="stylesheet" type="text/css" href="css/loginAndRegister.css">
@@ -95,54 +97,16 @@
 </head>
 <body>
 
+
+	<!-- <div ng-cloak ng-show="!loggedIn" ng-controller="dashboardCtr"> -->
 	<!-- LOGIN AND REGISTRATION AREA -->
-	<div ng-cloak ng-show="!loggedIn" ng-controller="loginAndRegistrationCtr">
-		<center>
-			<div ng-cloak ng-if="login">
-				<div class="row">
-					<div class="col-sm-4">&nbsp;</div>
-					<div class="col-sm-4">
-						<div class="login">
-							<h3>Login</h3>
-							<span ng-cloak ng-if="notification" style="font-weight: bold;">{{notification}}<br/><br/></span>
-							<input ng-class="{'invalid_cred_login' : !user.username}" type="text" placeholder="Username" class="form-control mb-5" ng-model="user.username">
-							<input ng-class="{'invalid_cred_login' : !user.password}" type="password" placeholder="Password" class="form-control mb-30" ng-model="user.password">
-							<button ng-click="loginUser()" class="form-control btn btn-primary mb-5">Login</button>
-							<a href="" ng-click="setLogin(false)">Go to sign-up</a>
-						</div>
-					</div>
-					<div class="col-sm-4">&nbsp;</div>
-				</div>
-			</div>
-			<div ng-cloak ng-if="!login">
-				<div class="row">
-					<div class="col-sm-4">&nbsp;</div>
-					<div class="col-sm-4">
-						<div class="register">
-							<h3>Register</h3>
-							<div ng-cloak ng-if="failedRegister" class="cr mt5"><center>Please provide correct and complete information</center><br/></div>
-							<span ng-cloak ng-if="notification" style="font-weight: bold;">{{notification}}<br/><br/></span>
-							<input ng-class="{'invalid_cred_register' : !register.username}" type="text" placeholder="Set new username" class="form-control mb-5" ng-model="register.username">
-							<input type="text" placeholder="Set new first name" class="form-control mb-5" ng-model="register.firstname">
-							<input type="text" placeholder="Set new last name" class="form-control mb-5" ng-model="register.lastname">
-							<input type="text" placeholder="Set new location" class="form-control mb-5" ng-model="register.location">
-							<input type="text" placeholder="Set new contact number" maxlength="11" class="form-control mb-5" onkeypress='return event.charCode >= 48 && event.charCode <= 57' ng-model="register.contact"></input>
-							<input ng-class="{'invalid_cred_register' : !register.password || register.password !== register.retypePassword}" type="password" placeholder="Set new password" class="form-control mb-5" ng-model="register.password">
-							<input ng-class="{'invalid_cred_register' : !register.retypePassword || register.password !== register.retypePassword}" type="password" placeholder="Retype password" class="form-control mb-5" ng-model="register.retypePassword">
-							<input ng-class="{'invalid_cred_register' : !register.email}" type="email" placeholder="Set new Email" class="form-control mb-30" ng-model="register.email">
-							<button ng-click="registerUser()" class="form-control btn btn-primary mb-5">Register</button>
-							<a href="" ng-click="setLogin(true)">Back to login</a>
-						</div>
-					</div>
-					<div class="col-sm-4">&nbsp;</div>
-				</div>
-			</div>
-		</center>
-	</div>
+
 
 	<!-- DASHBOARD AREA -->
-	<div class="dashboard" ng-cloak ng-show="$$prevSibling.loggedIn" ng-controller="dashboardCtr">
+	<div class="dashboard" ng-controller="dashboardCtr">
 
+		<a ng-cloak ng-if="showProducts" href="#products" class="back-to-top btn btn-primary">Back to products</a>
+		<a ng-cloak ng-if="showProducts && !user.isAdmin && loggedIn" class="back-to-top-cart btn btn-success" href="#" class="" ng-click="viewCart()"><i class="fa fa-shopping-cart"></i> View cart</a>
 
 		<!-- NAVBAR -->
 		<div class="picos_navbar">
@@ -170,12 +134,17 @@
 				</div>
 
 
-			      <a ng-cloak ng-if="!user.isAdmin" class="btn btn-success btn-sm view_cart_btn" href="#" class="" ng-click="viewCart()"><i class="fa fa-shopping-cart"></i> View cart</a>
+			      <a ng-cloak ng-if="!user.isAdmin && loggedIn" class="btn btn-success btn-sm view_cart_btn" href="#" class="" ng-click="viewCart()"><i class="fa fa-shopping-cart"></i> View cart</a>
 
 			      <ul class="nav navbar-nav navbar-right pull-right">
 			        <li class="dropdown">
-			          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Welcome, {{user.username}} <span class="caret"></span></a>
-			          <ul class="dropdown-menu">
+
+			          <button ng-cloak ng-if="!loggedIn && showProducts" class="btn btn-primary user-buttons" ng-click="openRegister()">Register</button>
+			          <button ng-cloak ng-if="!loggedIn && showProducts" class="btn btn-success user-buttons" ng-click="openLogin()">Login</button>
+
+			          <a ng-cloak ng-if="loggedIn" href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Welcome, {{user.username}} <span class="caret"></span></a>
+
+			          <ul id="user-dropdown" class="dropdown-menu">
 
 						<li ng-cloak ng-if="user.isAdmin"><a href="" ng-click="addNewProducts()"><i class="fa fa-plus"></i> Add new products</a></li>
 						<li><a href="" ng-click="setEditAccount()"><i class="fa fa-pencil"></i> Edit account</a></li>
@@ -210,89 +179,59 @@
 		</div>
 
 
+		<div ng-cloak ng-if="login">
+			<center>
+				<div class="row">
+					<div class="col-sm-4">&nbsp;</div>
+					<div class="col-sm-4">
+						<div class="login">
+							<h3>Login</h3>
+							<span ng-cloak ng-if="notification" style="font-weight: bold;">{{notification}}<br/><br/></span>
+							<input ng-class="{'invalid_cred_login' : !user.username}" type="text" placeholder="Username" class="form-control mb-5" ng-model="user.username">
+							<input ng-class="{'invalid_cred_login' : !user.password}" type="password" placeholder="Password" class="form-control mb-30" ng-model="user.password">
 
-		<!-- ADD PRODUCTS CONTAINER -->
-		<div ng-cloak ng-show="showAddProducts" ng-controller="addProductsCtr">
-
-			<div class="row">
-				<div class="col-sm-1">&nbsp;</div>
-				<div class="col-sm-10">
-					
-					<div class="add_products">
-
-						<div class="row">
-							<div class="col-sm-6"><h3>Add new products</h3><small>*Note: Please only add images below 1 Mb size.</small></div>
-							<div class="col-sm-2 pr-5"><button ng-disabled="disableSubmitAll" ng-cloak ng-if="newProducts.length" class="btn btn-warning add_row" ng-click="clearAllRows()"><i class="fa fa-minus"></i> Clear all</button></div>
-							<div class="col-sm-2 pr-5 pl-5"><button ng-disabled="disableSubmitAll" ng-cloak ng-if="newProducts.length" class="btn btn-danger add_row" ng-click="removeAllRows()"><i class="fa fa-times"></i> Remove all</button></div>
-							<div class="col-sm-2 pl-5"><button ng-disabled="disableSubmitAll" class="btn btn-primary add_row" ng-click="addAnotherRow()"><i class="fa fa-plus"></i> Add row</button></div>
+							<button ng-disabled="loggingIn" ng-click="loginUser()" class="form-control btn btn-success mb-5">
+								<span ng-cloak ng-if="loggingIn">Logging in...</span>
+								<span ng-cloak ng-if="!loggingIn">Login</span>
+							</button>
+							<a href="" ng-click="refreshAndViewProducts()">Back to products</a>
 						</div>
-
-						<div ng-cloak ng-if="newProducts.length" class="mt-20">
-							<div class="row">
-								<div class="col-sm-1 pr-5">&nbsp;</div>
-								<div class="col-sm-2 pl-5 pr-5"><b>Preview image</b></div>
-								<div class="col-sm-3 pl-5 pr-5"><b>Name</b></div>
-								<div class="col-sm-2 pl-5 pr-5"><b>Description</b></div>
-								<div class="col-sm-1 pl-5 pr-5"><b>Serving</b></div>
-								<div class="col-sm-1 pl-5 pr-5"><b>Price</b></div>
-								<div class="col-sm-2 pr-l">&nbsp;</div>
-							</div><br/>
-
-							<div ng-repeat="newProduct in newProducts" class="add_product_row">
-								<div class="progress" ng-cloak ng-if="newProduct.loading">
-									<div class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%">
-								    	<span class="sr-only">100% Complete</span>
-								  	</div>
-								</div>
-
-								<div ng-cloak ng-if="newProduct.duplicate">
-									<center><span>{{saveMsg}}</span><span> <a href="" ng-click="goBack(newProduct, true)">Go back</a></span></center>
-								</div>
-
-
-								<div ng-cloak ng-if="newProduct.inserted">
-									<center><span>{{saveMsg}}</span><span> <a href="" ng-click="goBack(newProduct, false)">Go back</a></span></center>
-								</div>
-
-								<div class="row" ng-cloak ng-if="newProduct.standby">
-									<div class="col-sm-1 pr-5">
-										<label for="file-upload-{{$index}}" class="btn btn-primary btn-sm">
-										    <i class="fa fa-upload"></i>
-										</label>
-										<input id="file-upload-{{$index}}" type="file" name="{{$index}}" fileread="vm.uploadme" />
-									</div>
-									<div class="col-sm-2 pl-5 pr-5"><img ng-src="" id="image-preview-{{$index}}" width="100%" height="80px;" class="preview-image"></div>
-									<div class="col-sm-3 pl-5 pr-5"><input ng-class="{'invalid_cred_newProduct' : !newProduct.name}" type="text" class="form-control" ng-model="newProduct.name"></div>
-									<div class="col-sm-2 pl-5 pr-5"><textarea class="form-control" ng-model="newProduct.description" rows="1"></textarea></div>
-									<div class="col-sm-1 pl-5 pr-5"><input type="text" class="form-control" onkeypress='return event.charCode >= 48 && event.charCode <= 57' ng-model="newProduct.serving"></div>
-									<div class="col-sm-1 pl-5 pr-5"><input ng-class="{'invalid_cred_newProduct' : !newProduct.price}" type="text" class="form-control" onkeypress='return event.charCode >= 48 && event.charCode <= 57' ng-model="newProduct.price"></div>
-									<div class="col-sm-2 pl-5">
-										<div class="pull-right">
-											<button ng-disabled="!newProduct.name && !newProduct.price" class="btn btn-sm btn-success" ng-click="saveRow(newProduct, $index)"><i class="fa fa-check"></i></button>
-											<button class="btn btn-sm btn-warning" ng-click="clearRow(newProduct, $index)"><i class="fa fa-minus"></i></button>
-											<button class="btn btn-sm btn-danger" ng-click="removeRow($index)"><i class="fa fa-times"></i></button>
-										</div>
-									</div>
-								</div>
-							</div>
-						</div>
-
-
-						<div ng-cloak ng-if="newProducts.length" class="row mt-20">
-							<div class="col-sm-9">&nbsp;</div>
-							<div class="col-sm-3"><button class="btn btn-success add_row" ng-click="submitAllRows()" ng-disabled="disableSubmitAll">Submit all products</button></div>
-						</div>
-
-						<div ng-cloak ng-if="!newProducts.length"><br/><center>Click the 'Add another row' button to start adding product information.</center></div>
-
-					</div>				
-
+					</div>
+					<div class="col-sm-4">&nbsp;</div>
 				</div>
-				<div class="col-sm-1">&nbsp;</div>
-			</div>
-
+			</center>
 		</div>
 
+
+		<div ng-cloak ng-if="registration">
+			<center>		
+				<div class="row">
+					<div class="col-sm-4">&nbsp;</div>
+					<div class="col-sm-4">
+						<div class="register">
+							<h3>Register</h3>
+							<div ng-cloak ng-if="failedRegister" class="cr mt5"><center>Please provide correct and complete information</center><br/></div>
+							<span ng-cloak ng-if="notification" style="font-weight: bold;">{{notification}}<br/><br/></span>
+							<input ng-class="{'invalid_cred_register' : !register.username || register.username.length <= 7}" type="text" placeholder="Set new username" class="form-control mb-5" ng-model="register.username">
+							<input type="text" placeholder="Set new first name" class="form-control mb-5" ng-model="register.firstname">
+							<input type="text" placeholder="Set new last name" class="form-control mb-5" ng-model="register.lastname">
+							<input type="text" placeholder="Set new location" class="form-control mb-5" ng-model="register.location">
+							<input type="text" placeholder="Set new contact number" maxlength="11" class="form-control mb-5" onkeypress='return event.charCode >= 48 && event.charCode <= 57' ng-model="register.contact"></input>
+							<input ng-class="{'invalid_cred_register' : !register.password || register.password !== register.retypePassword || register.password.length <= 7}" type="password" placeholder="Set new password" class="form-control mb-5" ng-model="register.password">
+							<input ng-class="{'invalid_cred_register' : !register.retypePassword || register.password !== register.retypePassword || register.retypePassword.length <= 7}" type="password" placeholder="Retype password" class="form-control mb-5" ng-model="register.retypePassword">
+							<input ng-class="{'invalid_cred_register' : !register.email}" type="email" placeholder="Set new mail" class="form-control mb-30" ng-model="register.email">
+
+							<button ng-disabled="registering" ng-click="registerUser()" class="form-control btn btn-success mb-5">
+								<span ng-cloak ng-if="!registering">Confirm registration</span>
+								<span ng-cloak ng-if="registering">Registering account...</span>
+							</button>
+							<a href="" ng-click="refreshAndViewProducts()">Back to products</a>
+						</div>
+					</div>
+					<div class="col-sm-4">&nbsp;</div>
+				</div>
+			<center>
+		</div>
 
 
 
@@ -316,7 +255,7 @@
 						    	<label for="file-upload-edit" class="btn btn-primary btn-sm">
 								    <i class="fa fa-upload"></i> <span>Browse product image</span>
 								</label>
-								<input id="file-upload-edit" type="file" fileread="vm.uploadme" />
+								<input id="file-upload-edit" type="file" accept="image/*" fileread="vm.uploadme" />
 				    		</div>
 				    		<div class="col-sm-5">
 				    			<label>&nbsp;</label>
@@ -324,6 +263,9 @@
 				    			<img ng-cloak ng-show="!showAngularImage" id="image-preview-edit-na" width="100%" height="120px;">
 				    		</div>
 				    		<div class="col-sm-3">&nbsp;</div>
+			    			<div class="col-sm-12" ng-cloak ng-if="tbe.filetype === 'not image'">
+								<br/><span class="cr">The file you are trying to upload is not an image. Please upload a proper image file not exceeding 1 Mb.</span>
+							</div>
 				      	</div><br/>
 
 				      	<div>
@@ -346,7 +288,7 @@
 			      </div>
 			      <div class="modal-footer">
 			        <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-			        <button type="button" class="btn btn-success" ng-click="confirmEditProduct()">Save changes</button>
+			        <button ng-disabled="!tbe.name || !tbe.price || tbe.filetype === 'standby' || tbe.filetype === 'not image'" type="button" class="btn btn-success" ng-click="confirmEditProduct()">Save changes</button>
 			      </div>
 			    </div>
 			  </div>
@@ -421,7 +363,7 @@
 			<div class="container">
 				<div class="row">
 					<div class="col-sm-8">
-						<input type="text" class="form-control" placeholder="Filter by name, description, serving suggestion or price" ng-model="productInformation">
+						<input id="products" type="text" class="form-control" placeholder="Filter by name, description, serving suggestion or price" ng-model="productInformation">
 					</div>
 					<div class="col-sm-4">
 						<div class="row">
@@ -450,61 +392,72 @@
 							<img ng-src="{{product.image}}" width="100%" height="194px;">
 							<div class="product_info" title="This product was updated last {{product.dateupdated | date:'fullDate'}}">
 								<div>
-									<span class="product_name">{{product.name}}</span>
+									<div class="product_name flow">{{product.name}}</div>
 									<span ng-cloak ng-if="product.sold >= 500" class="label label-warning label-lg">Best-seller!</span>
 								</div><br/>
 								<div class="product_background"><span>{{product.description}}</span></div><br/>
-								<div class="product_description">
-									<span ng-cloak ng-if="product.serving > 1">Serves 1 to {{product.serving | number}} persons</span>
-									<span ng-cloak ng-if="product.serving === 1">Serves 1 person</span>
-								</div>
-								<div class="product_price">
-									<span class="price">{{product.price | currency:"₱"}}</span> <span class="per_serving">/ order</span>
-								</div>
-								<div ng-cloak ng-if="!user.isAdmin" class="in_cart_count">
-									<span ng-cloak ng-if="product.inCart" class="label label-success">Currently {{product.inCart | number}} in cart</span>
-									<span ng-cloak ng-if="!product.inCart" class="label label-default">Currently 0 in cart</span>
-								</div>
-								<br/>
 
-								<div ng-cloak ng-if="user.isAdmin">
-
-									<button class="btn btn-warning" ng-click="setProductStock(product)"><i class="fa fa-exclamation-circle"></i>
-										<span ng-cloak ng-if="product.isOutOfStock === '0'">Set as out of stock</span>
-										<span ng-cloak ng-if="product.isOutOfStock === '1'">Set as in stock</span>
-									</button>
-
-									<button class="btn btn-primary" data-toggle="modal" data-target="#editProduct" ng-click="prepEditProduct(product)"><i class="fa fa-pencil"></i> Edit product</button>
-									<button class="btn btn-danger" data-toggle="modal" data-target="#deleteProduct" ng-click="prepDeleteProduct(product, $index)"><i class="fa fa-times"></i> Delete product</button>
-								</div>
-
-
-
-								<div ng-cloak ng-if="!user.isAdmin && product.isOutOfStock === '0'">
-									<div class="row">
-										<div class="col-sm-6">
-											<input type="number" name="input" ng-model="product.value" min="1" max="100" required class="form-control" placeholder="Quantity">
-										</div>
-										<div class="col-sm-6">
-											<div class="total"><span>Total: </span><span class="total_price">{{product.price * product.value | currency:"₱"}}</span></div>
-										</div>
-									</div>
-									<div class="row atc_div">
-										<div class="col-sm-12">
-											<button class="btn btn-primary" ng-click="addProductToCart(product)" ng-disabled="!product.value || !product.standby">
-												<span><i class="fa fa-shopping-cart"></i>
-													<span ng-cloak ng-if="product.adding">Adding to cart...</span>
-													<span ng-cloak ng-if="product.success">Successfully added to cart!</span>
-													<span ng-cloak ng-if="product.standby">Add to cart</span>
-												</span>
-											</button>
-										</div>
+								<div ng-cloak ng-if="!loggedIn">
+									<div class="product_price">
+										<span class="price">{{product.price | currency:"₱"}}</span> <span class="per_serving">/ order</span>
 									</div>
 								</div>
 
-								<div ng-cloak ng-if="!user.isAdmin && product.isOutOfStock === '1'" style="margin-top: 44px;">
-									<button class="btn btn-danger w100" disabled>Currently out of stock</button>
+								<div ng-cloak ng-if="loggedIn">
+
+									<div class="product_description">
+										<span ng-cloak ng-if="product.serving > 1">Serves 1 to {{product.serving | number}} persons</span>
+										
+										<span ng-cloak ng-if="product.serving === '1'">Serves 1 person</span>
+									</div>
+									<div class="product_price">
+										<span class="price">{{product.price | currency:"₱"}}</span> <span class="per_serving">/ order</span>
+									</div>
+									<div ng-cloak ng-if="!user.isAdmin" class="in_cart_count">
+										<span ng-cloak ng-if="product.inCart" class="label label-success">Currently {{product.inCart | number}} in cart</span>
+										<span ng-cloak ng-if="!product.inCart" class="label label-default">Currently 0 in cart</span>
+									</div>
+									<br/>
+
+									<div ng-cloak ng-if="user.isAdmin">
+
+										<button class="btn btn-warning" ng-click="setProductStock(product)"><i class="fa fa-exclamation-circle"></i>
+											<span ng-cloak ng-if="product.isOutOfStock === '0'">Set as out of stock</span>
+											<span ng-cloak ng-if="product.isOutOfStock === '1'">Set as in stock</span>
+										</button>
+
+										<button class="btn btn-primary" data-toggle="modal" data-target="#editProduct" ng-click="prepEditProduct(product)"><i class="fa fa-pencil"></i> Edit product</button>
+										<button class="btn btn-danger" data-toggle="modal" data-target="#deleteProduct" ng-click="prepDeleteProduct(product, $index)"><i class="fa fa-times"></i> Delete product</button>
+									</div>
+
+									<div ng-cloak ng-if="!user.isAdmin && product.isOutOfStock === '0'">
+										<div class="row">
+											<div class="col-sm-6">
+												<input type="number" name="input" ng-model="product.value" min="1" max="100" required class="form-control" placeholder="Quantity">
+											</div>
+											<div class="col-sm-6">
+												<div class="total"><span>Total: </span><span class="total_price">{{product.price * product.value | currency:"₱"}}</span></div>
+											</div>
+										</div>
+										<div class="row atc_div">
+											<div class="col-sm-12">
+												<button class="btn btn-primary" ng-click="addProductToCart(product)" ng-disabled="!product.value || !product.standby">
+													<span><i class="fa fa-shopping-cart"></i>
+														<span ng-cloak ng-if="product.adding">Adding to cart...</span>
+														<span ng-cloak ng-if="product.success">Successfully added to cart!</span>
+														<span ng-cloak ng-if="product.standby">Add to cart</span>
+													</span>
+												</button>
+											</div>
+										</div>
+									</div>
+
+									<div ng-cloak ng-if="!user.isAdmin && product.isOutOfStock === '1'" style="margin-top: 44px;">
+										<button class="btn btn-danger w100" disabled>Currently out of stock</button>
+									</div>
+
 								</div>
+
 
 
 
@@ -518,6 +471,95 @@
 			</div>
 		</div>
 
+
+
+		<!-- ADD PRODUCTS CONTAINER -->
+		<div ng-cloak ng-show="showAddProducts" ng-controller="addProductsCtr">
+
+
+			<div class="row">
+				<div class="col-sm-1">&nbsp;</div>
+				<div class="col-sm-10">
+					
+					<div class="add_products">
+
+						<div class="row">
+							<div class="col-sm-6"><h3>Add new products</h3><small>*Note: Please only add images below 1 Mb size.</small></div>
+							<div class="col-sm-2 pr-5"><button ng-disabled="disableSubmitAll" ng-cloak ng-if="newProducts.length" class="btn btn-warning add_row" ng-click="clearAllRows()"><i class="fa fa-minus"></i> Clear all</button></div>
+							<div class="col-sm-2 pr-5 pl-5"><button ng-disabled="disableSubmitAll" ng-cloak ng-if="newProducts.length" class="btn btn-danger add_row" ng-click="removeAllRows()"><i class="fa fa-times"></i> Remove all</button></div>
+							<div class="col-sm-2 pl-5"><button ng-disabled="disableSubmitAll" class="btn btn-primary add_row" ng-click="addAnotherRow()"><i class="fa fa-plus"></i> Add row</button></div>
+						</div>
+
+						<div ng-cloak ng-if="newProducts.length" class="mt-20">
+							<div class="row">
+								<div class="col-sm-1 pr-5">&nbsp;</div>
+								<div class="col-sm-2 pl-5 pr-5"><b>Preview image</b></div>
+								<div class="col-sm-3 pl-5 pr-5"><b>Name</b></div>
+								<div class="col-sm-2 pl-5 pr-5"><b>Description</b></div>
+								<div class="col-sm-1 pl-5 pr-5"><b>Serving</b></div>
+								<div class="col-sm-1 pl-5 pr-5"><b>Price</b></div>
+								<div class="col-sm-2 pr-l">&nbsp;</div>
+							</div><br/>
+
+							<div ng-repeat="newProduct in newProducts" class="add_product_row">
+								<div class="progress" ng-cloak ng-if="newProduct.loading">
+									<div class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%">
+								    	<span class="sr-only">100% Complete</span>
+								  	</div>
+								</div>
+
+								<div ng-cloak ng-if="newProduct.duplicate">
+									<center><span>{{saveMsg}}</span><span> <a href="" ng-click="goBack(newProduct, true)">Go back</a></span></center>
+								</div>
+
+
+								<div ng-cloak ng-if="newProduct.inserted">
+									<center><span>{{saveMsg}}</span><span> <a href="" ng-click="goBack(newProduct, false)">Go back</a></span></center>
+								</div>
+
+								<div class="row" ng-cloak ng-if="newProduct.standby">
+									<div class="col-sm-1 pr-5">
+										<label for="file-upload-{{$index}}" class="btn btn-primary btn-sm">
+										    <i class="fa fa-upload"></i>
+										</label>
+										<input id="file-upload-{{$index}}" type="file" accept="image/*" name="{{$index}}" fileread="vm.uploadme" />
+									</div>
+									<div class="col-sm-2 pl-5 pr-5"><img ng-src="" id="image-preview-{{$index}}" width="100%" height="80px;" class="preview-image"></div>
+									<div class="col-sm-3 pl-5 pr-5"><input ng-class="{'invalid_cred_newProduct' : !newProduct.name}" type="text" class="form-control" ng-model="newProduct.name"></div>
+									<div class="col-sm-2 pl-5 pr-5"><textarea class="form-control" ng-model="newProduct.description" rows="1"></textarea></div>
+									<div class="col-sm-1 pl-5 pr-5"><input type="text" class="form-control" onkeypress='return event.charCode >= 48 && event.charCode <= 57' ng-model="newProduct.serving"></div>
+									<div class="col-sm-1 pl-5 pr-5"><input ng-class="{'invalid_cred_newProduct' : !newProduct.price}" type="text" class="form-control" onkeypress='return event.charCode >= 48 && event.charCode <= 57' ng-model="newProduct.price"></div>
+									<div class="col-sm-2 pl-5">
+										<div class="pull-right">
+											<button ng-disabled="!newProduct.name || !newProduct.price || isImage === 'standby' || isImage === 'not image'" class="btn btn-sm btn-success" ng-click="saveRow(newProduct, $index)"><i class="fa fa-check"></i></button>
+											<button class="btn btn-sm btn-warning" ng-click="clearRow(newProduct, $index)"><i class="fa fa-minus"></i></button>
+											<button class="btn btn-sm btn-danger" ng-click="removeRow($index)"><i class="fa fa-times"></i></button>
+										</div>
+									</div>
+								</div>
+
+								<div ng-cloak ng-if="isImage === 'not image'">
+									<br/><center><span class="cr">The file you are trying to upload is not an image. Please upload a proper image file not exceeding 1 Mb.</span></center>
+								</div>
+
+							</div>
+						</div>
+
+
+						<div ng-cloak ng-if="newProducts.length" class="row mt-20">
+							<div class="col-sm-9">&nbsp;</div>
+							<div class="col-sm-3"><button class="btn btn-success add_row" ng-click="submitAllRows()" ng-disabled="disableSubmitAll">Submit all products</button></div>
+						</div>
+
+						<div ng-cloak ng-if="!newProducts.length"><br/><center>Click the 'Add another row' button to start adding product information.</center></div>
+
+					</div>				
+
+				</div>
+				<div class="col-sm-1">&nbsp;</div>
+			</div>
+
+		</div>
 
 
 
@@ -554,6 +596,15 @@
 										<td ng-bind="order.price | currency:'₱'"></td>
 										<td ng-bind="order.price * order.inCart | currency:'₱'"></td>
 									</tr>
+									<tr ng-cloak ng-show="forPickup !== 'true'">
+										<td>&nbsp;</td>
+										<td>&nbsp;</td>
+										<td>&nbsp;</td>
+										<td>&nbsp;</td>
+										<td>&nbsp;</td>
+										<td><span>Delivery fee:</span></td>
+										<td><span>{{delivery_location.price | currency:'₱' }}</span></td>
+									</tr>
 									<tr>
 										<td>&nbsp;</td>
 										<td>&nbsp;</td>
@@ -561,7 +612,19 @@
 										<td>&nbsp;</td>
 										<td>&nbsp;</td>
 										<td><b class="grand_total_text">Grand Total:</b></td>
-										<td><span class="grand_total_value">{{grandTotal | currency:'₱'}}</span></td>
+										<td>
+											<span ng-cloak ng-if="forPickup === 'false'" class="grand_total_value">{{grandTotal + delivery_location.price | currency:'₱'}}</span>
+											<span ng-cloak ng-if="forPickup === 'true'" class="grand_total_value">{{grandTotal | currency:'₱'}}</span>
+										</td>
+									</tr>
+									<tr>
+										<td>&nbsp;</td>
+										<td>&nbsp;</td>
+										<td>&nbsp;</td>
+										<td>&nbsp;</td>
+										<td>&nbsp;</td>
+										<td><span>Inclusiv of 12% VAT:</span></td>
+										<td><span>{{ 12 / 100 * grandTotal | currency:'₱' }}</span></td>
 									</tr>
 								</tbody>
 							</table>
@@ -580,10 +643,25 @@
 									</div>
 								</div><br/>
 								<div class="row">
-									<div class="col-sm-6">
+<!-- 									<div class="col-sm-6">
 										<input type="checkbox" ng-model="deliveryInformation.ownLocation"> Use own location</input><br/>
 										<b ng-cloak ng-if="deliveryInformation.ownLocation">{{receiver.location}}</b>
 										<input ng-class="{'invalid_cred_cart' : !new.location}" ng-cloak ng-if="!deliveryInformation.ownLocation" type="text" class="form-control" ng-model="new.location">
+									</div> -->
+									<div class="col-sm-6">
+
+										<div>
+											<p><label><input type="radio" ng-model="forPickup" value="true"> For pickup</label></p>
+											<p><label><input type="radio" ng-model="forPickup" value="false"> For delivery</label></p>
+										</div>
+
+										<div ng-cloak ng-if="forPickup !== 'true'">
+											<select ng-options="item as item.place for item in locations" ng-model="delivery_location" class="form-control" ng-change="updateDeliveryFee(delivery_location)"></select>
+											<input id="exact_location" ng-class="{'invalid_cred_cart' : !exact_location}" type="text" class="form-control" placeholder="Where exactly in {{delivery_location.place}}?" ng-model="exact_location">
+											<b>*Delivery fee: {{delivery_location.price | currency:"₱"}}</b>
+										</div>
+
+
 									</div>
 									<div class="col-sm-6">
 										<label for="changeFor">Desired time of delivery</label><br/>
@@ -591,6 +669,24 @@
 										<small class="cr" ng-cloak ng-if="timeError">{{timeError}}</small>
 									</div>
 								</div><br/>
+
+
+
+<!-- 								<div class="row">
+									<div class="col-sm-6">
+										<select ng-options="item as item.name for item in locations" ng-model="occasion" class="form-control"></select><select></select>
+										<input type="text" class="form-control" placeholder="Where exactly in">
+									</div>
+									<div class="col-sm-6">
+										<label for="changeFor">Desired time of delivery</label><br/>
+										<input  ng-class="{'invalid_cred_cart' : timeError || !new.time}" id="deliveryTime" type="time" class="form-control" ng-model="new.time">
+										<small class="cr" ng-cloak ng-if="timeError">{{timeError}}</small>
+									</div>
+								</div><br/>
+ -->
+
+
+
 								<div class="row">
 									<div class="col-sm-6">
 										<label for="changeFor">Bring change for</label><br/>
@@ -705,6 +801,7 @@
 						<div class="row">
 							<div class="col-sm-6">
 								<label>Number of persons</label>
+								<small style="font-size: 10px;"><Br></small><Br>
 								<input ng-class="{'invalid_cred_reservation' : !reservationInfo.persons}" type="text" class="form-control" onkeypress='return event.charCode >= 48 && event.charCode <= 57' ng-model="reservationInfo.persons">
 								<!-- <small class="cr" ng-cloak ng-if="moneyError">{{moneyError}}</small> -->
 							</div>
@@ -713,11 +810,13 @@
 								<div class="row">
 									<div class="col-sm-6">
 										<label for="changeFor">Date of arrival</label><br/>
+										<small style="font-size: 10px;"><Br></small>
 										<input ng-class="{'invalid_cred_reservation' : dateError || !reservationInfo.date}" id="deliveryTime" type="date" class="form-control" ng-model="reservationInfo.date">
 										<small class="cr" ng-cloak ng-if="dateError">{{dateError}}</small>
 									</div>
 									<div class="col-sm-6">
-										<label for="changeFor">Time of arrival</label><br/>
+										<label for="changeFor">Time of arrival </label><br/>
+										<small style="font-size: 10px;">(We are close at 9:00PM - 8:00AM)</small>
 										<input ng-class="{'invalid_cred_reservation' : timeError || !reservationInfo.time}" id="deliveryTime" type="time" class="form-control" ng-model="reservationInfo.time">
 										<small class="cr" ng-cloak ng-if="timeError">{{timeError}}</small>
 									</div>
@@ -834,7 +933,7 @@
 				<div class="col-sm-10">
 					<div class="reservationsTable">
 
-						<div class="row">
+						<div ng-cloak ng-if="reservations.length" class="row">
 							<div class="col-sm-6">
 								<h3 ng-cloak ng-if="!user.isAdmin">My reservations</h3>
 								<h3 ng-cloak ng-if="user.isAdmin">Customer reservations</h3><br/>
@@ -1027,6 +1126,11 @@
 											<span ng-show="sortType == 'amount' && !sortReverse" class="fa fa-caret-down"></span>
         									<span ng-show="sortType == 'amount' && sortReverse" class="fa fa-caret-up"></span>
 										</td>
+										<td class="cp" ng-click="sortType = 'type'; sortReverse = !sortReverse">
+											<b>Type</b>
+											<span ng-show="sortType == 'type' && !sortReverse" class="fa fa-caret-down"></span>
+        									<span ng-show="sortType == 'type' && sortReverse" class="fa fa-caret-up"></span>
+										</td>
 										<td class="cp" ng-click="sortType = 'status'; sortReverse = !sortReverse">
 											<b>Status</b>
 											<span ng-show="sortType == 'status' && !sortReverse" class="fa fa-caret-down"></span>
@@ -1039,7 +1143,7 @@
 								<tbody ng-cloak ng-if="!receiver.isAdmin && missingFilter"><tr><td colspan="11"><center>{{missingFilter}}</center></td></tr></tbody>
 								<tbody ng-cloak ng-if="!receiver.isAdmin && !missingFilter">
 									<tr ng-repeat="order in customerOrders | orderBy:sortType:sortReverse | filter:filterOrders" ng-cloak ng-show="order.referrer === receiver.email">
-										<td>{{order.id}}</td>
+										<td>{{order.id}} {{order.type}}</td>
 										<td>{{order.referrer}}</td>
 										<td>{{order.name}}</td>
 										<td><div ng-repeat="item in order.orders">{{item.name}} x {{item.inCart}}</div></td>
@@ -1049,6 +1153,7 @@
 										<td>{{order.timeordered | date:'medium'}}</td>
 										<td>{{order.grandtotal | currency:"₱"}}</td>
 										<td>{{order.amount | currency:"₱"}}</td>
+										<td>{{order.type}}</td>
 										<td><span class="{{order.status}}">{{order.status}}</span></td>
 									</tr>
 								</tbody>

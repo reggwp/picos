@@ -21,8 +21,10 @@ app.controller('productsCtr', ['$rootScope', '$scope', '$http', '$localStorage',
 		$scope.status = $scope.productFilter[2];
 		$scope.sortType = '-sold';
 
-		$scope.$on('showAngularImage', function () {
+		$scope.$on('showAngularImage', function (evt, isImage) {
+			$scope.tbe.filetype = isImage;
 			$scope.showAngularImage = false;
+			console.log($scope.tbe)
 		});
 
 		$scope.sortProductsBy = function (filter) {
@@ -118,9 +120,10 @@ app.controller('productsCtr', ['$rootScope', '$scope', '$http', '$localStorage',
 					$scope.tbe.price = parseInt($scope.tbe.price);
 					$scope.tbe.datenow = new Date().toString();
 
-					if (!$scope.showAngularImage) {	
+					if (!$scope.showAngularImage && $scope.tbe.filetype === 'image') {	
 						$scope.tbe.image = document.getElementById('image-preview-edit-na').src;
 					}
+
 
 					console.log($scope.tbe)
 
@@ -139,6 +142,9 @@ app.controller('productsCtr', ['$rootScope', '$scope', '$http', '$localStorage',
 						});
 					});
 					
+				}
+				else{
+					console.log(document.getElementsByClassName('invalid_cred_productedit'))
 				}
 			});
 		};

@@ -15,9 +15,11 @@ if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 } 
 
+$description = addslashes($data->description);
+$name = addslashes($data->name);
 $updateProduct = "UPDATE products
-				  SET name = '".$data->name."',
-				  description = '".$data->description."',
+				  SET name = '".$name."',
+				  description = '".$description."',
 				  serving = '".$data->serving."',
 				  price = '".$data->price."',
 				  dateupdated = '".$data->datenow."',

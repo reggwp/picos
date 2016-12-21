@@ -1,6 +1,19 @@
 app.controller('cartCtr', ['$rootScope', '$scope', '$http', '$localStorage', '$timeout',
 	function ($rootScope, $scope, $http, $localStorage, $timeout) {
 		
+		$scope.delivery = false;
+		$scope.exact_location = '';
+
+		$scope.locations = [
+			{ place: 'Pagsanjan', price: 20 },
+			{ place: 'Lumban', price: 40 },
+			{ place: 'Sta. Cruz', price: 50 },
+			{ place: 'Siniloan', price: 70 },
+		];
+		$scope.delivery_location = $scope.locations[0];
+
+		$scope.forPickup = "true";
+
 		$scope.$on('updateGrandTotal', function (){
 			var totalPrices = [];
 			angular.forEach($scope.orders, function (order) {
@@ -18,6 +31,10 @@ app.controller('cartCtr', ['$rootScope', '$scope', '$http', '$localStorage', '$t
 			$scope.showConfirmCodeField = false;
 			$scope.showConfirmOrder = false;
 		});
+
+		$scope.updateDeliveryFee = function (location) {
+			$scope.delivery_location = location;
+		}
 
 		$scope.resetter = function () {
 			localStorage.captchaValidated = false;
@@ -145,6 +162,7 @@ app.controller('cartCtr', ['$rootScope', '$scope', '$http', '$localStorage', '$t
 
 
 		$scope.sendEmailConfirmation = function () {
+
 			// checks if there is internet connection, if there is, use captcha, if not, disregards captcha
 			var captchaPassed = navigator.onLine ? (localStorage.captchaValidated === "true") : true;
 			// ======================================================================================================
@@ -208,10 +226,16 @@ app.controller('cartCtr', ['$rootScope', '$scope', '$http', '$localStorage', '$t
 			$scope.finalInfo.cleanOrders = $scope.orders;
 			$scope.finalInfo.name = $scope.deliveryInformation.ownName ? $scope.receiver.firstname + ' ' +$scope.receiver.lastname : $scope.new.name;
 			$scope.finalInfo.contact = $scope.deliveryInformation.ownContact ? $scope.receiver.contact : $scope.new.contact;
-			$scope.finalInfo.location = $scope.deliveryInformation.ownLocation ? $scope.receiver.location : $scope.new.location;
+			// $scope.finalInfo.location = $scope.deliveryInformation.ownLocation ? $scope.receiver.location : $scope.new.location;
 			$scope.finalInfo.datetimeOfOrder = new Date();
 			$scope.finalInfo.grandtotal = $scope.grandTotal.toString();
 			$scope.finalInfo.referrer = $scope.receiver.email;
+
+			$scope.finalInfo.location = $scope.forPickup === 'true' ? null : $scope.delivery_location.place;
+			$scope.finalInfo.delivery_location = $scope.forPickup === 'true' ? null : document.getElementById('exact_location').value;
+			$scope.finalInfo.type = $scope.forPickup === 'true' ? 'pickup' : 'delivery';
+
+			console.log($scope.finalInfo.delivery_location)
 
 			// checks if there is internet connection, if there is, use captcha, if not, disregards captcha
 			$scope.finalInfo.captchaPassed = navigator.onLine ? (localStorage.captchaValidated === "true") : true;
@@ -238,7 +262,8 @@ app.controller('cartCtr', ['$rootScope', '$scope', '$http', '$localStorage', '$t
 									$scope.orderMsg = null;
 									$scope.resetter();
 									$scope.length = 0;
-									$scope.orders = {};
+									$scope.orders = {}; 
+									$rootScope.currentOrders = {};
 									$rootScope.$broadcast('viewProducts');
 									// empties out the cart after confirming the order
 								}, 6000);

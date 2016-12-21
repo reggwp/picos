@@ -29,7 +29,11 @@ if ($result->fetch_assoc()["name"] !== NULL) {
   echo 3;
 }
 else {
-  $sql = "INSERT INTO products (name, description, serving, price, sold, image, dateupdated) VALUES ('".$data->name."', '".$data->description."', '".$data->serving."','".$data->price."','".$data->sold."', '".$data->image."', '".$data->dateupdated."')";
+
+	$description = addslashes($data->description);
+	$name = addslashes($data->name);
+
+  $sql = "INSERT INTO products (name, description, serving, price, sold, image, dateupdated) VALUES ('".$name."', '".$description."', '".$data->serving."','".$data->price."','".$data->sold."', '".$data->image."', '".$data->dateupdated."')";
   $result = mysqli_query($conn, $sql);
 
   echo 1;

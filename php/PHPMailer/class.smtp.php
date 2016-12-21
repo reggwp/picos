@@ -244,7 +244,7 @@ class SMTP
      * @access public
      * @return boolean
      */
-    public function connect($host, $port = null, $timeout = 80, $options = array())
+    public function connect($host, $port = null, $timeout = 90, $options = array())
     {
         static $streamok;
         //This is enabled by default since 5.0.0 but some providers disable it

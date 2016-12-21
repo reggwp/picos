@@ -13,12 +13,16 @@ app.controller('addProductsCtr', ['$rootScope', '$scope', '$http', '$localStorag
 					standby: true
 				}];
 				$scope.disableSubmitAll = false;
+				$scope.isImage = 'standby';
 			}
 		});
 
 
-		$scope.$on('passImage', function (event, data, where) {
-			document.getElementById(where === '' ? 'image-preview-edit-na' : 'image-preview-' + where).src = data;	
+		$scope.$on('passImage', function (event, data, where, isImage) {
+			$scope.isImage = isImage;
+			if ($scope.isImage) {
+				document.getElementById(where === '' ? 'image-preview-edit-na' : 'image-preview-' + where).src = data;		
+			}
 		});
 
 
@@ -42,6 +46,9 @@ app.controller('addProductsCtr', ['$rootScope', '$scope', '$http', '$localStorag
 					row.standby = false;
 					row.image = document.getElementById('image-preview-' + index).src;
 					row.dateupdated = new Date();
+					$scope.isImage = 'standby';
+
+
 					$http({
 					    method: 'POST',
 					    url: '../php/addProduct.php',
